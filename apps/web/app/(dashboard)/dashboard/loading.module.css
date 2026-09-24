@@ -1,0 +1,46 @@
+.page {
+  min-height: 100vh;
+  padding: 5rem clamp(1.5rem, 7vw, 8rem);
+  background: #eef3f1;
+}
+
+.line,
+.title,
+.grid div {
+  background: #d8e0dd;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.line {
+  width: 150px;
+  height: 12px;
+}
+
+.title {
+  width: min(70vw, 680px);
+  height: 100px;
+  margin-top: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 5rem;
+}
+
+.grid div {
+  height: 210px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

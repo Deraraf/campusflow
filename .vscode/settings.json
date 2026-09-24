@@ -1,0 +1,14 @@
+{
+  "folder-color.pathColors": [
+    {
+      "folderPath": "campusflow/apps/",
+      "isFolderOnly": true,
+      "color": "foldercolorizer.color_00ffff"
+    },
+    {
+      "folderPath": "campusflow/apps/api/",
+      "isFolderOnly": true,
+      "color": "foldercolorizer.color_00afff"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+.page {
+  min-height: 100vh;
+  padding: 7rem clamp(1.5rem, 6vw, 7rem) 4rem;
+  color: #173042;
+  background: #f4f0e8;
+}
+
+.hero {
+  max-width: 760px;
+  padding-bottom: 7rem;
+}
+
+.eyebrow {
+  margin-bottom: 1.5rem;
+  color: #c45b36;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 700px;
+  font-size: clamp(3.6rem, 8vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.lede {
+  max-width: 510px;
+  margin-top: 2rem;
+  color: #5b6870;
+  font-size: 1.2rem;
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.primaryAction,
+.secondaryAction {
+  padding: 0.9rem 1.2rem;
+  border: 1px solid #173042;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.primaryAction {
+  color: #f4f0e8;
+  background: #173042;
+}
+
+.secondaryAction {
+  color: #173042;
+  background: transparent;
+}
+
+.signalGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #b9b5aa;
+  border-top: 1px solid #b9b5aa;
+}
+
+.signalGrid article {
+  min-height: 190px;
+  padding: 1.4rem;
+  background: #f4f0e8;
+}
+
+.signalGrid span {
+  color: #c45b36;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.signalGrid h2 {
+  margin-top: 3rem;
+  font-size: 1.25rem;
+}
+
+.signalGrid p {
+  max-width: 220px;
+  margin-top: 0.6rem;
+  color: #5b6870;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding-top: 4rem;
+  }
+
+  .hero {
+    padding-bottom: 4rem;
+  }
+
+  .signalGrid {
+    grid-template-columns: 1fr;
+  }
+}

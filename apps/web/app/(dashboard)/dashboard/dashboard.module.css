@@ -1,0 +1,68 @@
+.page {
+  min-height: 100vh;
+  padding: 5rem clamp(1.5rem, 7vw, 8rem);
+  color: #173042;
+  background: #eef3f1;
+}
+
+.eyebrow {
+  color: #c45b36;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.page h1 {
+  max-width: 760px;
+  margin-top: 1rem;
+  font-size: clamp(3.2rem, 7vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.lede {
+  max-width: 520px;
+  margin-top: 1.5rem;
+  color: #5b6870;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 5rem;
+}
+
+.grid article {
+  min-height: 210px;
+  padding: 1.25rem;
+  border-top: 2px solid #173042;
+  background: #fbfaf7;
+}
+
+.grid span {
+  color: #c45b36;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.grid h2 {
+  margin-top: 3rem;
+  font-size: 1.2rem;
+}
+
+.grid p {
+  margin-top: 0.6rem;
+  color: #5b6870;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+    margin-top: 3rem;
+  }
+}

@@ -1,0 +1,570 @@
+// use prisma-next
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum Semester {
+  FIRST
+  SECOND
+  SUMMER
+}
+
+enum CourseType {
+  CORE
+  ELECTIVE
+  GENERAL
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  DROPPED
+  COMPLETED
+  FAILED
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  LATE
+  GRADED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+enum ConversationRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum AccountStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+}
+
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum StudentStatus {
+  ACTIVE
+  SUSPENDED
+  GRADUATED
+  WITHDRAWN
+}
+
+enum StudentCardStatus {
+  ACTIVE
+  LOST
+  BLOCKED
+  EXPIRED
+  REPLACED
+}
+
+enum MealCardStatus {
+  ACTIVE
+  BLOCKED
+  EXPIRED
+  REPLACED
+}
+
+enum AccessCredentialStatus {
+  ACTIVE
+  BLOCKED
+  EXPIRED
+  REVOKED
+}
+
+
+// ============================================================
+// AUTHENTICATION / USERS
+// ============================================================
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         Role          @default(STUDENT)
+  status       AccountStatus @default(PENDING_VERIFICATION)
+
+  emailVerifiedAt TimestamptzString?
+
+  student       Student?
+  instructor    Instructor?
+
+  studentApplications StudentApplication[]
+
+  conversations Conversation[]
+  notifications Notification[]
+  emailVerificationTokens EmailVerificationToken?
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  tokenHash String   @unique
+  expiresAt TimestamptzString
+  usedAt    TimestamptzString?
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  @@index([expiresAt])
+}
+
+
+// ============================================================
+// STUDENT
+// ============================================================
+
+model Student {
+  id            String        @id @default(uuid())
+  userId        String        @unique
+  studentNumber String        @unique
+  programId     String
+  status        StudentStatus @default(ACTIVE)
+
+  user        User         @relation(fields: [userId], references: [id])
+  program     Program      @relation(fields: [programId], references: [id])
+  enrollments Enrollment[]
+  submissions Submission[]
+  grades      Grade[]
+  attendance  Attendance[]
+
+  application StudentApplication?
+
+  studentCards StudentCard[]
+  mealCard     MealCard?
+  accessCredentials AccessCredential[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+// ============================================================
+// STUDENT APPLICATION
+// ============================================================
+model StudentApplication {
+  id        String            @id @default(uuid())
+  userId    String
+  programId String
+  studentId String?           @unique
+
+  status ApplicationStatus @default(PENDING)
+
+  applicationNumber String @unique
+
+  submittedAt TimestamptzString @default(now())
+  reviewedAt  TimestamptzString?
+  rejectionReason String?
+
+  user    User    @relation(fields: [userId], references: [id])
+  program Program @relation(fields: [programId], references: [id])
+
+  student Student? @relation(fields: [studentId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+// ============================================================
+// STUDENT CARD
+// ============================================================
+
+model StudentCard {
+  id        String            @id @default(uuid())
+  studentId String
+
+  cardNumber String @unique
+  qrCodeId   String @unique
+
+  status StudentCardStatus @default(ACTIVE)
+
+  issuedAt  TimestamptzString @default(now())
+  expiresAt TimestamptzString?
+  revokedAt TimestamptzString?
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+// ============================================================
+// MEAL CARD
+// ============================================================
+
+model MealCard {
+  id        String @id @default(uuid())
+  studentId String @unique
+
+  cardNumber String @unique
+
+  status MealCardStatus @default(ACTIVE)
+
+  issuedAt  TimestamptzString @default(now())
+  expiresAt TimestamptzString?
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+// ============================================================
+// ACCESS CREDENTIAL
+// ============================================================
+model AccessCredential {
+  id        String @id @default(uuid())
+  studentId String
+
+  credentialNumber String @unique
+
+  status AccessCredentialStatus @default(ACTIVE)
+
+  issuedAt  TimestamptzString @default(now())
+  expiresAt TimestamptzString?
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+// ============================================================
+// DEPARTMENT
+// ============================================================
+
+model Department {
+  id   String @id @default(uuid())
+  name String @unique
+  code String @unique
+
+  instructors Instructor[]
+  programs    Program[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// INSTRUCTOR
+// ============================================================
+
+model Instructor {
+  id             String @id @default(uuid())
+  userId         String @unique
+  employeeNumber String @unique
+  departmentId   String
+
+  user        User         @relation(fields: [userId], references: [id])
+  department Department   @relation(fields: [departmentId], references: [id])
+  offerings   CourseOffering[]
+  assignments Assignment[]
+  exams       Exam[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// PROGRAM
+// ============================================================
+
+model Program {
+  id           String @id @default(uuid())
+  name         String
+  code         String @unique
+  departmentId String
+
+  department          Department           @relation(fields: [departmentId], references: [id])
+  curriculumCourses   CurriculumCourse[]
+  students            Student[]
+  studentApplications StudentApplication[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+// ============================================================
+// COURSE
+// ============================================================
+
+model Course {
+  id          String @id @default(uuid())
+  code        String @unique
+  title       String
+  description String?
+
+  curriculumCourses CurriculumCourse[]
+  offerings          CourseOffering[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// PROGRAM ↔ COURSE
+// ============================================================
+
+model CurriculumCourse {
+  id        String @id @default(uuid())
+  programId String
+  courseId  String
+
+  year       Int
+  semester   Semester
+  credits    Int
+  courseType CourseType
+  isRequired Boolean @default(true)
+
+  program Program @relation(fields: [programId], references: [id])
+  course  Course  @relation(fields: [courseId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([programId, courseId])
+}
+
+
+// ============================================================
+// COURSE OFFERING
+// ============================================================
+
+model CourseOffering {
+  id         String @id @default(uuid())
+  courseId   String
+  instructorId String
+
+  academicYear Int
+  semester     Semester
+  section      String
+  room        String?
+  capacity    Int?
+
+  course     Course     @relation(fields: [courseId], references: [id])
+  instructor Instructor @relation(fields: [instructorId], references: [id])
+
+  enrollments Enrollment[]
+  assignments Assignment[]
+  exams       Exam[]
+  attendance  Attendance[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([courseId, academicYear, semester, section])
+}
+
+
+// ============================================================
+// ENROLLMENT
+// ============================================================
+
+model Enrollment {
+  id          String @id @default(uuid())
+  studentId   String
+  offeringId  String
+  status      EnrollmentStatus @default(ACTIVE)
+  enrolledAt  TimestamptzString @default(now())
+
+  student  Student        @relation(fields: [studentId], references: [id])
+  offering CourseOffering @relation(fields: [offeringId], references: [id])
+
+  grade Grade?
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([studentId, offeringId])
+}
+
+
+// ============================================================
+// ASSIGNMENT
+// ============================================================
+
+model Assignment {
+  id           String @id @default(uuid())
+  offeringId   String
+  instructorId String
+
+  title       String
+  description String?
+  dueDate     TimestamptzString
+  maxScore    Int
+
+  offering   CourseOffering @relation(fields: [offeringId], references: [id])
+  instructor Instructor     @relation(fields: [instructorId], references: [id])
+
+  submissions Submission[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// ASSIGNMENT SUBMISSION
+// ============================================================
+
+model Submission {
+  id           String @id @default(uuid())
+  assignmentId String
+  studentId    String
+
+  content   String?
+  fileUrl   String?
+  score     Int?
+  status    SubmissionStatus @default(SUBMITTED)
+  submittedAt TimestamptzString @default(now())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id])
+  student    Student    @relation(fields: [studentId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([assignmentId, studentId])
+}
+
+
+// ============================================================
+// EXAM
+// ============================================================
+
+model Exam {
+  id           String @id @default(uuid())
+  offeringId   String
+  instructorId String
+
+  title      String
+  examDate   TimestamptzString
+  maxScore   Int
+
+  offering   CourseOffering @relation(fields: [offeringId], references: [id])
+  instructor Instructor     @relation(fields: [instructorId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// FINAL GRADE
+// ============================================================
+
+model Grade {
+  id           String @id @default(uuid())
+  enrollmentId String @unique
+  studentId    String
+
+  score       Float?
+  letterGrade String?
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id])
+  student    Student    @relation(fields: [studentId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// ATTENDANCE
+// ============================================================
+
+model Attendance {
+  id         String @id @default(uuid())
+  studentId  String
+  offeringId String
+
+  date   TimestamptzString
+  status AttendanceStatus
+
+  student  Student        @relation(fields: [studentId], references: [id])
+  offering CourseOffering @relation(fields: [offeringId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([studentId, offeringId, date])
+}
+
+
+// ============================================================
+// AI CONVERSATION
+// ============================================================
+
+model Conversation {
+  id     String @id @default(uuid())
+  userId String
+
+  title String?
+
+  user     User      @relation(fields: [userId], references: [id])
+  messages Message[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+
+// ============================================================
+// AI MESSAGE
+// ============================================================
+
+model Message {
+  id             String @id @default(uuid())
+  conversationId String
+
+  role    ConversationRole
+  content String
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+}
+
+
+// ============================================================
+// NOTIFICATION
+// ============================================================
+
+model Notification {
+  id     String @id @default(uuid())
+  userId String
+
+  title     String
+  message   String
+  isRead    Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}

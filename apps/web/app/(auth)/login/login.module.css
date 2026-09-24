@@ -1,0 +1,106 @@
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.65fr);
+  gap: 5rem;
+  min-height: 100vh;
+  padding: 7rem clamp(1.5rem, 8vw, 9rem);
+  color: #173042;
+  background: #f4f0e8;
+}
+
+.intro {
+  align-self: center;
+}
+
+.eyebrow {
+  margin-bottom: 1.5rem;
+  color: #c45b36;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  font-size: clamp(3.5rem, 7vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.intro p:last-child {
+  max-width: 360px;
+  margin-top: 1.5rem;
+  color: #5b6870;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.form {
+  display: grid;
+  align-self: center;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid #b9b5aa;
+  background: #fbfaf7;
+}
+
+.form label {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.form input {
+  min-height: 3rem;
+  padding: 0.75rem;
+  border: 1px solid #9aa2a4;
+  color: #173042;
+  background: #fff;
+  font: inherit;
+}
+
+.form button {
+  min-height: 3rem;
+  border: 0;
+  color: #fbfaf7;
+  background: #173042;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.form p[role="status"] {
+  color: #5b6870;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.form a {
+  color: #c45b36;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.formButton {
+  display: block;
+  min-height: 3rem;
+  padding: 0.9rem;
+  color: #fbfaf7;
+  background: #173042;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-top: 4rem;
+  }
+}

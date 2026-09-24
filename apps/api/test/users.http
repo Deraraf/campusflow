@@ -1,0 +1,8 @@
+
+### Create user
+POST http://localhost:4000/auth/resend-verification
+Content-Type: application/json
+
+{
+  "email": "derageremu2119@gmail.com"
+}
