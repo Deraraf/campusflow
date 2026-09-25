@@ -1,9 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { SubmitEvent, useState } from "react";
 import { login } from "../../../lib/api/auth";
 import styles from "./login.module.css";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type LoginFormProps = {
   apiUrl: string;
@@ -17,7 +17,7 @@ export default function LoginForm({ apiUrl }: LoginFormProps) {
 
   const router = useRouter();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
     setMessage(null);
