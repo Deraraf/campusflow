@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const apiUrl = process.env.API_URL ?? "http://localhost:4000";
+const apiUrl = process.env.NEXT_API_URL ?? "http://localhost:4000";
 
 type ServerApiOptions = RequestInit & {
   next?: {

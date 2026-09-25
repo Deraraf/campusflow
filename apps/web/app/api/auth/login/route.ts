@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const apiUrl = process.env.API_URL ?? "http://localhost:4000";
+const apiUrl = process.env.NEXT_API_URL ?? "http://localhost:4000";
 
 export async function POST(request: Request) {
   const response = await fetch(`${apiUrl}/auth/login`, {
