@@ -31,11 +31,8 @@ async function readError(response: Response, fallback: string): Promise<Error> {
   return new Error(message ?? fallback);
 }
 
-export async function login(
-  apiUrl: string,
-  credentials: LoginCredentials,
-): Promise<AuthUser> {
-  const response = await fetch(`${apiUrl}/auth/login`, {
+export async function login(credentials: LoginCredentials): Promise<AuthUser> {
+  const response = await fetch("/api/auth/login", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },

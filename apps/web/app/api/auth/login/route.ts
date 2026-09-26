@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   });
 
   const body = await response.text();
+
   const nextResponse = new NextResponse(body, {
     status: response.status,
     headers: {
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
         response.headers.get("content-type") ?? "application/json",
     },
   });
+
   const setCookie = response.headers.get("set-cookie");
 
   if (setCookie) {

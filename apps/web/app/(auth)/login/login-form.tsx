@@ -5,11 +5,7 @@ import { login } from "../../../lib/api/auth";
 import styles from "./login.module.css";
 import { useRouter } from "next/navigation";
 
-type LoginFormProps = {
-  apiUrl: string;
-};
-
-export default function LoginForm({ apiUrl }: LoginFormProps) {
+export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -23,11 +19,8 @@ export default function LoginForm({ apiUrl }: LoginFormProps) {
     setMessage(null);
 
     try {
-      await login(apiUrl, { email, password });
-      router.refresh();
+      await login({ email, password });
       router.push("/dashboard");
-
-      setMessage("Signed in. Your secure session is ready.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to sign in");
     } finally {
