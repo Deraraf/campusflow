@@ -59,6 +59,4 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^5.0.1"
   }
-  git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
 }
