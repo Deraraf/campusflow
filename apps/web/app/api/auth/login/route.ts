@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const apiUrl = process.env.API_URL ?? "http://localhost:4000";
+const apiUrl = process.env.NEXT_API_URL ?? "http://localhost:4000";
 
 export async function POST(request: Request) {
   const response = await fetch(`${apiUrl}/auth/login`, {
@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   });
 
   const body = await response.text();
+
   const nextResponse = new NextResponse(body, {
     status: response.status,
     headers: {
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
         response.headers.get("content-type") ?? "application/json",
     },
   });
+
   const setCookie = response.headers.get("set-cookie");
 
   if (setCookie) {

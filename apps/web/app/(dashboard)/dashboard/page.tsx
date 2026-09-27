@@ -1,8 +1,6 @@
 import LogoutButton from "../../(auth)/logout-button";
 import styles from "./dashboard.module.css";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-
 export default function DashboardPage() {
   return (
     <main className={styles.page}>
@@ -40,7 +38,7 @@ export default function DashboardPage() {
         </article>
       </div>
 
-      <LogoutButton apiUrl={apiUrl} />
+      <LogoutButton />
     </main>
   );
 }

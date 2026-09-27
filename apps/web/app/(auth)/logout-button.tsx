@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { logout } from "../../lib/api/auth";
 
-export default function LogoutButton({ apiUrl }: { apiUrl: string }) {
+export default function LogoutButton() {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export default function LogoutButton({ apiUrl }: { apiUrl: string }) {
     setError(null);
 
     try {
-      await logout(apiUrl);
+      await logout();
 
       router.replace("/login");
       router.refresh();

@@ -1,15 +1,4 @@
-export type AuthUser = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: "STUDENT" | "INSTRUCTOR" | "ADMIN";
-  status: "PENDING_VERIFICATION" | "ACTIVE" | "SUSPENDED";
-  emailVerifiedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
+import type { AuthUser } from "@repo/types";
 type ApiError = { message?: string | string[] };
 
 type LoginCredentials = {
@@ -31,11 +20,8 @@ async function readError(response: Response, fallback: string): Promise<Error> {
   return new Error(message ?? fallback);
 }
 
-export async function login(
-  apiUrl: string,
-  credentials: LoginCredentials,
-): Promise<AuthUser> {
-  const response = await fetch(`${apiUrl}/auth/login`, {
+export async function login(credentials: LoginCredentials): Promise<AuthUser> {
+  const response = await fetch("/api/auth/login", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -104,8 +90,8 @@ export async function resendVerification(
   return (await response.json()) as { message: string };
 }
 
-export async function logout(apiUrl: string): Promise<void> {
-  const response = await fetch(`${apiUrl}/auth/logout`, {
+export async function logout(): Promise<void> {
+  const response = await fetch("api/auth/logout", {
     method: "POST",
     credentials: "include",
   });
