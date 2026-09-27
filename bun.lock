@@ -56,6 +56,7 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
+        "@repo/types": "*",
         "@repo/ui": "*",
         "next": "16.3.4",
         "react": "19.2.8",
@@ -107,6 +108,10 @@
         "eslint-plugin-turbo": "2.10.12",
         "globals": "17.12.0",
       },
+    },
+    "packages/types": {
+      "name": "@repo/types",
+      "version": "1.0.0",
     },
     "packages/typescript-config": {
       "name": "@repo/typescript-config",
@@ -706,6 +711,8 @@
     "@puppeteer/browsers": ["@puppeteer/browsers@3.2.2", "", { "dependencies": { "modern-tar": "^0.8.4", "yargs": "^18.0.0" }, "peerDependencies": { "proxy-agent": ">=8.0.1", "yauzl": "^2.10.0 || ^3.4.0" }, "optionalPeers": ["proxy-agent", "yauzl"], "bin": { "browsers": "lib/main-cli.js" } }, "sha512-q2BU4YfO9h/Wt7IcWPcggpOOqLk2Tbs1hDwolvKZrweRjy751OJBKMN9zO5bfD0pzU7X/tvKw/exQds4pM/LOg=="],
 
     "@repo/eslint-config": ["@repo/eslint-config@workspace:packages/eslint-config"],
+
+    "@repo/types": ["@repo/types@workspace:packages/types"],
 
     "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
 

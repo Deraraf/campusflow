@@ -1,18 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { apiFetch } from "../../lib/api/server";
-
-export type AuthUser = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: "STUDENT" | "INSTRUCTOR" | "ADMIN";
-  status: "PENDING_VERIFICATION" | "ACTIVE" | "SUSPENDED";
-  emailVerifiedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
+import { AuthUser } from "@repo/types";
 
 function DashboardAuthFallback() {
   return (
