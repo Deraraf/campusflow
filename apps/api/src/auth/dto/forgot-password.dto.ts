@@ -1,0 +1,10 @@
+import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+
+export class ForgotPasswordDto {
+  @IsEmail({}, { message: 'A valid email address is required' })
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value,
+  )
+  email: string;
+}

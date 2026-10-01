@@ -7,6 +7,9 @@ export async function POST(request: Request) {
     method: "POST",
     headers: {
       cookie: request.headers.get("cookie") ?? "",
+      ...(request.headers.get("origin")
+        ? { origin: request.headers.get("origin") as string }
+        : {}),
     },
     cache: "no-store",
   });

@@ -10,11 +10,12 @@ import {
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../auth/guards/roles.guard.js';
+import { CsrfGuard } from '../auth/guards/csrf.guard.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 import { UsersService } from './users.service.js';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard, CsrfGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

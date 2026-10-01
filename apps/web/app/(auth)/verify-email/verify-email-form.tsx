@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { SubmitEvent, useEffect, useRef, useState } from "react";
 import { resendVerification, verifyEmail } from "../../../lib/api/auth";
 import styles from "./verify-email.module.css";
 
-export default function VerifyEmailForm({ apiUrl }: { apiUrl: string }) {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token") ?? "";
+export default function VerifyEmailForm() {
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setToken(params.get("token") ?? "");
+  }, []);
 
   const verifiedTokenRef = useRef<string | null>(null);
 
@@ -31,7 +34,7 @@ export default function VerifyEmailForm({ apiUrl }: { apiUrl: string }) {
 
     verifiedTokenRef.current = token;
 
-    verifyEmail(apiUrl, token)
+    verifyEmail(token)
       .then(() => {
         setIsSuccess(true);
         setMessage(
@@ -45,16 +48,16 @@ export default function VerifyEmailForm({ apiUrl }: { apiUrl: string }) {
             : "This verification link is invalid or expired.",
         );
       });
-  }, [apiUrl, token]);
+  }, [token]);
 
-  async function handleResend(event: React.FormEvent<HTMLFormElement>) {
+  async function handleResend(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setIsResending(true);
     setResendMessage(null);
 
     try {
-      const result = await resendVerification(apiUrl, email);
+      const result = await resendVerification(email);
 
       setResendMessage(result.message);
     } catch (error) {

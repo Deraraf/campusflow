@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { SubmitEvent, useState } from "react";
 import { register } from "../../../lib/api/auth";
 import styles from "./register.module.css";
 
-export default function RegisterForm({ apiUrl }: { apiUrl: string }) {
+export default function RegisterForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ export default function RegisterForm({ apiUrl }: { apiUrl: string }) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
     setIsSubmitting(true);
@@ -23,7 +23,7 @@ export default function RegisterForm({ apiUrl }: { apiUrl: string }) {
     setIsSuccess(false);
 
     try {
-      await register(apiUrl, {
+      await register({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: normalizedEmail,
@@ -133,7 +133,17 @@ export default function RegisterForm({ apiUrl }: { apiUrl: string }) {
               className={isSuccess ? styles.success : styles.error}
               role={isSuccess ? "status" : "alert"}
             >
-              {message}
+              <p>{message}</p>
+              {!isSuccess && message.toLowerCase().includes("pending verification") ? (
+                <p style={{ marginTop: "0.5rem" }}>
+                  <Link
+                    href={`/resend-verification?email=${encodeURIComponent(email.trim().toLowerCase())}`}
+                    style={{ color: "#c45b36", fontWeight: "bold" }}
+                  >
+                    Resend verification email →
+                  </Link>
+                </p>
+              ) : null}
             </div>
           ) : null}
 
@@ -147,6 +157,10 @@ export default function RegisterForm({ apiUrl }: { apiUrl: string }) {
 
           <p className={styles.loginPrompt}>
             Already have an account? <Link href="/login">Sign in</Link>
+          </p>
+
+          <p className={styles.loginPrompt} style={{ marginTop: "0.25rem" }}>
+            Need to reset your password? <Link href="/forgot-password">Reset it here</Link>
           </p>
         </form>
       </div>

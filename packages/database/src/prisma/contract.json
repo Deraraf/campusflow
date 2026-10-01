@@ -68,6 +68,10 @@
       "model": "Notification",
       "namespace": "public"
     },
+    "passwordResetToken": {
+      "model": "PasswordResetToken",
+      "namespace": "public"
+    },
     "program": {
       "model": "Program",
       "namespace": "public"
@@ -2276,6 +2280,93 @@
               "table": "notification"
             }
           },
+          "PasswordResetToken": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tokenHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "usedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "User",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "tokenHash": {
+                  "column": "tokenHash"
+                },
+                "usedAt": {
+                  "column": "usedAt"
+                },
+                "userId": {
+                  "column": "userId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "passwordResetToken"
+            }
+          },
           "Program": {
             "fields": {
               "code": {
@@ -3164,6 +3255,13 @@
                   "plane": "domain"
                 }
               },
+              "sessionVersion": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "status": {
                 "nullable": false,
                 "type": {
@@ -3246,6 +3344,21 @@
                   "namespace": "public"
                 }
               },
+              "passwordResetTokens": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "PasswordResetToken",
+                  "namespace": "public"
+                }
+              },
               "student": {
                 "cardinality": "1:1",
                 "on": {
@@ -3302,6 +3415,9 @@
                 },
                 "role": {
                   "column": "role"
+                },
+                "sessionVersion": {
+                  "column": "sessionVersion"
                 },
                 "status": {
                   "column": "status"
@@ -4907,6 +5023,89 @@
               },
               "uniques": []
             },
+            "passwordResetToken": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "tokenHash": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "usedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "userId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "userId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "passwordResetToken"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "user"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "expiresAt"
+                  ],
+                  "name": "passwordResetToken_expiresAt_idx_6b6b8c10",
+                  "prefix": "passwordResetToken_expiresAt_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "userId"
+                  ]
+                },
+                {
+                  "columns": [
+                    "tokenHash"
+                  ]
+                }
+              ]
+            },
             "program": {
               "columns": {
                 "code": {
@@ -5611,6 +5810,15 @@
                     "plane": "storage"
                   }
                 },
+                "sessionVersion": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "initial"
+                  },
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "status": {
                   "codecId": "pg/text@1",
                   "default": {
@@ -5768,10 +5976,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b93afbac1e30bc6fc36d99801b5a79a215bf5dbdfe02ead4f6d9dc75f23bae32"
+    "storageHash": "3325f753be5731500637a021f9e292e4f75b6b9e796e18d883b129705a926217"
   },
   "execution": {
-    "executionHash": "308011b9515f341da75a60211b1ba3843fca324c56b62f52279fc40e980a939b",
+    "executionHash": "e274881078635931ba3a31153ccef34b583fc678b9e96b33f4e62a09f387f93f",
     "mutations": {
       "defaults": [
         {
@@ -6158,6 +6366,17 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "notification"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "passwordResetToken"
           }
         },
         {

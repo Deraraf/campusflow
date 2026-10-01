@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { forwardedClientIpHeader } from "../../../../lib/api/forwarded-client-ip";
 
 const apiUrl = process.env.NEXT_API_URL ?? "http://localhost:4000";
 
@@ -7,6 +8,7 @@ export async function POST(request: Request) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...forwardedClientIpHeader(request),
     },
     body: JSON.stringify(await request.json()),
     cache: "no-store",

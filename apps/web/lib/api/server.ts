@@ -1,6 +1,7 @@
 "server-only";
 
 import { cookies } from "next/headers";
+import type { AuthUser } from "@repo/types";
 
 const apiUrl = process.env.NEXT_API_URL ?? "http://localhost:4000";
 
@@ -34,4 +35,17 @@ export async function apiFetch<T>(
   }
 
   return response.json() as Promise<T>;
+}
+
+/**
+ * Fetches the authenticated user from the API.
+ * Returns null when no valid session exists (unauthenticated / token expired).
+ * Safe to call from any Server Component — never throws on auth errors.
+ */
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  try {
+    return await apiFetch<AuthUser>("/auth/me");
+  } catch {
+    return null;
+  }
 }

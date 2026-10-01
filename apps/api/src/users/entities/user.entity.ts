@@ -6,6 +6,7 @@ export interface UserCredentials {
   id: string;
   email: string;
   passwordHash: string;
+  sessionVersion: string;
   firstName: string;
   lastName: string;
   role: UserRole;
@@ -27,7 +28,7 @@ export interface UserResponse {
   updatedAt: string;
 }
 
-export interface EmailVerificationTokenRecord {
+export interface AuthTokenRecord {
   id: string;
   userId: string;
   tokenHash: string;

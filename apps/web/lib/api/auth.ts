@@ -1,4 +1,5 @@
 import type { AuthUser } from "@repo/types";
+
 type ApiError = { message?: string | string[] };
 
 type LoginCredentials = {
@@ -36,10 +37,9 @@ export async function login(credentials: LoginCredentials): Promise<AuthUser> {
 }
 
 export async function register(
-  apiUrl: string,
   credentials: RegisterCredentials,
 ): Promise<AuthUser> {
-  const response = await fetch(`${apiUrl}/auth/register`, {
+  const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
@@ -52,11 +52,8 @@ export async function register(
   return (await response.json()) as AuthUser;
 }
 
-export async function verifyEmail(
-  apiUrl: string,
-  token: string,
-): Promise<AuthUser> {
-  const response = await fetch(`${apiUrl}/auth/verify-email`, {
+export async function verifyEmail(token: string): Promise<AuthUser> {
+  const response = await fetch("/api/auth/verify-email", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ token }),
@@ -70,10 +67,9 @@ export async function verifyEmail(
 }
 
 export async function resendVerification(
-  apiUrl: string,
   email: string,
 ): Promise<{ message: string }> {
-  const response = await fetch(`${apiUrl}/auth/resend-verification`, {
+  const response = await fetch("/api/auth/resend-verification", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -90,8 +86,48 @@ export async function resendVerification(
   return (await response.json()) as { message: string };
 }
 
+export async function forgotPassword(email: string): Promise<{ message: string }> {
+  const response = await fetch("/api/auth/forgot-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email.trim().toLowerCase(),
+    }),
+  });
+
+  if (!response.ok) {
+    throw await readError(response, "Unable to send the password reset email");
+  }
+
+  return (await response.json()) as { message: string };
+}
+
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<{ message: string }> {
+  const response = await fetch("/api/auth/reset-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: token.trim(),
+      password,
+    }),
+  });
+
+  if (!response.ok) {
+    throw await readError(response, "Unable to reset your password");
+  }
+
+  return (await response.json()) as { message: string };
+}
+
 export async function logout(): Promise<void> {
-  const response = await fetch("api/auth/logout", {
+  const response = await fetch("/api/auth/logout", {
     method: "POST",
     credentials: "include",
   });

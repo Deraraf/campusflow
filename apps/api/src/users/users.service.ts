@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import { DatabaseService } from '../database/database.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
-  EmailVerificationTokenRecord,
+  AuthTokenRecord,
   UserCredentials,
   UserResponse,
 } from './entities/user.entity';
@@ -33,6 +34,14 @@ export class UsersService {
       .first();
 
     return user === null ? null : this.toResponse(user);
+  }
+
+  async findOneForAuth(id: string): Promise<UserCredentials | null> {
+    const user = await this.database.client.orm.public.User.where({ id })
+      .all()
+      .first();
+
+    return user === null ? null : this.toCredentials(user);
   }
 
   async findByEmail(email: string): Promise<UserResponse | null> {
@@ -79,11 +88,25 @@ export class UsersService {
     userId: string;
     tokenHash: string;
     expiresAt: string;
-  }): Promise<EmailVerificationTokenRecord | null> {
+  }): Promise<AuthTokenRecord | null> {
     const token = await this.findEmailVerificationTokenByUserId(data.userId);
 
     if (token === null) {
-      return null;
+      const created =
+        await this.database.client.orm.public.EmailVerificationToken.create({
+          userId: data.userId,
+          tokenHash: data.tokenHash,
+          expiresAt: data.expiresAt,
+        });
+
+      return {
+        id: created.id,
+        userId: created.userId,
+        tokenHash: created.tokenHash,
+        expiresAt: created.expiresAt,
+        usedAt: created.usedAt,
+        createdAt: created.createdAt,
+      };
     }
 
     const refreshedToken =
@@ -111,7 +134,7 @@ export class UsersService {
 
   async findEmailVerificationTokenByUserId(
     userId: string,
-  ): Promise<EmailVerificationTokenRecord | null> {
+  ): Promise<AuthTokenRecord | null> {
     const token =
       await this.database.client.orm.public.EmailVerificationToken.where({
         userId,
@@ -135,7 +158,7 @@ export class UsersService {
 
   async findEmailVerificationToken(
     tokenHash: string,
-  ): Promise<EmailVerificationTokenRecord | null> {
+  ): Promise<AuthTokenRecord | null> {
     const token =
       await this.database.client.orm.public.EmailVerificationToken.where({
         tokenHash,
@@ -159,6 +182,105 @@ export class UsersService {
     });
 
     return user === null ? null : this.toResponse(user);
+  }
+
+  async refreshPasswordResetToken(data: {
+    userId: string;
+    tokenHash: string;
+    expiresAt: string;
+  }): Promise<AuthTokenRecord | null> {
+    const token = await this.findPasswordResetTokenByUserId(data.userId);
+
+    if (token === null) {
+      const created = await this.database.client.orm.public.PasswordResetToken.create({
+        userId: data.userId,
+        tokenHash: data.tokenHash,
+        expiresAt: data.expiresAt,
+      });
+
+      return {
+        id: created.id,
+        userId: created.userId,
+        tokenHash: created.tokenHash,
+        expiresAt: created.expiresAt,
+        usedAt: created.usedAt,
+        createdAt: created.createdAt,
+      };
+    }
+
+    const refreshedToken =
+      await this.database.client.orm.public.PasswordResetToken.where({
+        id: token.id,
+      }).update({
+        tokenHash: data.tokenHash,
+        expiresAt: data.expiresAt,
+        usedAt: null,
+      });
+
+    if (refreshedToken === null) {
+      return null;
+    }
+
+    return {
+      id: refreshedToken.id,
+      userId: refreshedToken.userId,
+      tokenHash: refreshedToken.tokenHash,
+      expiresAt: refreshedToken.expiresAt,
+      usedAt: refreshedToken.usedAt,
+      createdAt: refreshedToken.createdAt,
+    };
+  }
+
+  async findPasswordResetTokenByUserId(
+    userId: string,
+  ): Promise<AuthTokenRecord | null> {
+    const token =
+      await this.database.client.orm.public.PasswordResetToken.where({
+        userId,
+      })
+        .all()
+        .first();
+
+    return token === null ? null : this.toEmailVerificationToken(token);
+  }
+
+  async findPasswordResetToken(
+    tokenHash: string,
+  ): Promise<AuthTokenRecord | null> {
+    const token =
+      await this.database.client.orm.public.PasswordResetToken.where({
+        tokenHash,
+      })
+        .all()
+        .first();
+
+    return token === null ? null : this.toEmailVerificationToken(token);
+  }
+
+  async consumePasswordResetToken(tokenId: string): Promise<boolean> {
+    const token =
+      await this.database.client.orm.public.PasswordResetToken.where({
+        id: tokenId,
+        usedAt: null,
+      }).update({
+        usedAt: new Date().toISOString(),
+      });
+
+    return token !== null;
+  }
+
+  async updatePassword(
+    userId: string,
+    passwordHash: string,
+  ): Promise<boolean> {
+    const user = await this.database.client.orm.public.User.where({
+      id: userId,
+    }).update({
+      passwordHash,
+      sessionVersion: randomUUID(),
+    });
+
+    return user !== null;
   }
 
   async consumeEmailVerificationToken(tokenId: string): Promise<boolean> {
@@ -188,7 +310,21 @@ export class UsersService {
     return user === null ? null : this.toResponse(user);
   }
 
+  async deleteEmailVerificationTokensByUserId(userId: string): Promise<void> {
+    await this.database.client.orm.public.EmailVerificationToken.where({
+      userId,
+    }).delete();
+  }
+
+  async deletePasswordResetTokensByUserId(userId: string): Promise<void> {
+    await this.database.client.orm.public.PasswordResetToken.where({
+      userId,
+    }).delete();
+  }
+
   async remove(id: string): Promise<UserResponse | null> {
+    await this.deleteEmailVerificationTokensByUserId(id);
+    await this.deletePasswordResetTokensByUserId(id);
     const user = await this.database.client.orm.public.User.where({
       id,
     }).delete();
@@ -215,6 +351,7 @@ export class UsersService {
       id: user.id,
       email: user.email,
       passwordHash: user.passwordHash,
+      sessionVersion: user.sessionVersion,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
@@ -226,8 +363,8 @@ export class UsersService {
   }
 
   private toEmailVerificationToken(
-    token: EmailVerificationTokenRecord,
-  ): EmailVerificationTokenRecord {
+    token: AuthTokenRecord,
+  ): AuthTokenRecord {
     return {
       id: token.id,
       userId: token.userId,

@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { apiFetch } from "../../lib/api/server";
-import { AuthUser } from "@repo/types";
+import { getCurrentUser } from "../../lib/api/server";
 
 function DashboardAuthFallback() {
   return (
@@ -24,9 +23,9 @@ async function ProtectedDashboard({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  try {
-    await apiFetch<AuthUser>("/auth/me");
-  } catch {
+  const user = await getCurrentUser();
+
+  if (user === null) {
     redirect("/login");
   }
 

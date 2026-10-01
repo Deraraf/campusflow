@@ -100,6 +100,7 @@ model User {
   id           String        @id @default(uuid())
   email        String        @unique
   passwordHash String
+  sessionVersion String      @default("initial")
   firstName    String
   lastName     String
   role         Role          @default(STUDENT)
@@ -115,12 +116,26 @@ model User {
   conversations Conversation[]
   notifications Notification[]
   emailVerificationTokens EmailVerificationToken?
+  passwordResetTokens PasswordResetToken?
 
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
 }
 
 model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  tokenHash String   @unique
+  expiresAt TimestamptzString
+  usedAt    TimestamptzString?
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
   id        String   @id @default(uuid())
   userId    String   @unique
   tokenHash String   @unique

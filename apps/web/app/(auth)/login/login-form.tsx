@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { SubmitEvent, useState } from "react";
 import { login } from "../../../lib/api/auth";
 import styles from "./login.module.css";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ export default function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextUrl = searchParams.get("next") || "/dashboard";
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,14 +22,17 @@ export default function LoginForm() {
     setMessage(null);
 
     try {
-      await login({ email, password });
-      router.push("/dashboard");
+      await login({ email: email.trim().toLowerCase(), password });
+      router.push(nextUrl);
+      router.refresh();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to sign in");
     } finally {
       setIsSubmitting(false);
     }
   }
+
+  const isVerificationError = message?.toLowerCase().includes("verification");
 
   return (
     <section className={styles.shell}>
@@ -59,7 +65,50 @@ export default function LoginForm() {
         <button disabled={isSubmitting} type="submit">
           {isSubmitting ? "Signing in..." : "Sign in"}
         </button>
-        {message ? <p role="status">{message}</p> : null}
+
+        {message ? (
+          <div>
+            <p role="status">{message}</p>
+            {isVerificationError ? (
+              <p style={{ marginTop: "0.5rem" }}>
+                <Link
+                  href={
+                    email
+                      ? `/resend-verification?email=${encodeURIComponent(email)}`
+                      : "/resend-verification"
+                  }
+                >
+                  Resend verification link →
+                </Link>
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "1rem",
+            paddingTop: "1rem",
+            borderTop: "1px solid #dcd7cb",
+            fontSize: "0.85rem",
+            gap: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <Link href="/register">Create an account</Link>
+          <Link href="/forgot-password">Forgot password?</Link>
+          <Link
+            href={
+              email
+                ? `/resend-verification?email=${encodeURIComponent(email)}`
+                : "/resend-verification"
+            }
+          >
+            Resend activation email
+          </Link>
+        </div>
       </form>
     </section>
   );
