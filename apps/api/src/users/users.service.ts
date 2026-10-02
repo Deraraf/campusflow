@@ -257,30 +257,53 @@ export class UsersService {
     return token === null ? null : this.toEmailVerificationToken(token);
   }
 
-  async consumePasswordResetToken(tokenId: string): Promise<boolean> {
-    const token =
-      await this.database.client.orm.public.PasswordResetToken.where({
-        id: tokenId,
+  async resetPasswordWithToken(data: {
+    tokenId: string;
+    userId: string;
+    passwordHash: string;
+  }): Promise<boolean> {
+    return this.database.client.transaction(async (tx) => {
+      const token = await tx.orm.public.PasswordResetToken.where({
+        id: data.tokenId,
+        userId: data.userId,
         usedAt: null,
+      })
+        .all()
+        .first();
+
+      if (
+        token === null ||
+        new Date(token.expiresAt).getTime() <= Date.now()
+      ) {
+        return false;
+      }
+
+      const consumedToken =
+        await tx.orm.public.PasswordResetToken.where({
+          id: data.tokenId,
+          userId: data.userId,
+          usedAt: null,
+        }).update({
+          usedAt: new Date().toISOString(),
+        });
+
+      if (consumedToken === null) {
+        return false;
+      }
+
+      const user = await tx.orm.public.User.where({
+        id: data.userId,
       }).update({
-        usedAt: new Date().toISOString(),
+        passwordHash: data.passwordHash,
+        sessionVersion: randomUUID(),
       });
 
-    return token !== null;
-  }
+      if (user === null) {
+        throw new Error('Unable to update the user password');
+      }
 
-  async updatePassword(
-    userId: string,
-    passwordHash: string,
-  ): Promise<boolean> {
-    const user = await this.database.client.orm.public.User.where({
-      id: userId,
-    }).update({
-      passwordHash,
-      sessionVersion: randomUUID(),
+      return true;
     });
-
-    return user !== null;
   }
 
   async consumeEmailVerificationToken(tokenId: string): Promise<boolean> {

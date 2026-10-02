@@ -243,17 +243,13 @@ export class AuthService {
       type: argon2.argon2id,
     });
 
-    const updated = await this.usersService.updatePassword(user.id, passwordHash);
+    const resetCompleted = await this.usersService.resetPasswordWithToken({
+      tokenId: token.id,
+      userId: user.id,
+      passwordHash,
+    });
 
-    if (!updated) {
-      throw new UnauthorizedException('Invalid password reset token');
-    }
-
-    const tokenConsumed = await this.usersService.consumePasswordResetToken(
-      token.id,
-    );
-
-    if (!tokenConsumed) {
+    if (!resetCompleted) {
       throw new UnauthorizedException('Invalid or expired password reset token');
     }
 
