@@ -2,10 +2,10 @@
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.65fr);
   gap: 5rem;
-  min-height: 100vh;
-  padding: 7rem clamp(1.5rem, 8vw, 9rem);
-  color: #173042;
-  background: #f4f0e8;
+  min-height: calc(100svh - 135px);
+  padding: clamp(2.5rem, 7vw, 6rem) clamp(1.25rem, 8vw, 8rem);
+  color: var(--foreground);
+  background: var(--background);
 }
 
 .intro {
@@ -14,7 +14,7 @@
 
 .eyebrow {
   margin-bottom: 1.5rem;
-  color: #c45b36;
+  color: var(--accent);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -30,7 +30,7 @@
 .intro p:last-child {
   max-width: 360px;
   margin-top: 1.5rem;
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: 1.15rem;
   line-height: 1.5;
 }
@@ -40,8 +40,10 @@
   align-self: center;
   gap: 1.25rem;
   padding: clamp(1.5rem, 4vw, 3rem);
-  border: 1px solid #b9b5aa;
-  background: #fbfaf7;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .form label {
@@ -54,20 +56,32 @@
 .form input {
   min-height: 3rem;
   padding: 0.75rem;
-  border: 1px solid #9aa2a4;
-  color: #173042;
-  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--foreground);
+  background: var(--surface-raised);
   font: inherit;
+}
+
+.form input:focus {
+  border-color: var(--accent);
+  outline: 3px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  outline-offset: 1px;
 }
 
 .form button {
   min-height: 3rem;
   border: 0;
-  color: #fbfaf7;
-  background: #173042;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--accent);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+.form button:hover:not(:disabled) {
+  background: var(--accent-strong);
 }
 
 .form button:disabled {
@@ -76,13 +90,13 @@
 }
 
 .form p[role="status"] {
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: 0.9rem;
   line-height: 1.4;
 }
 
 .form a {
-  color: #c45b36;
+  color: var(--accent);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -91,16 +105,46 @@
   display: block;
   min-height: 3rem;
   padding: 0.9rem;
-  color: #fbfaf7;
-  background: #173042;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--accent);
   font-weight: 700;
   text-align: center;
+}
+
+.formLinks {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.formLinks a {
+  font-size: 0.82rem;
+}
+
+.messageLink {
+  margin-top: 0.5rem;
 }
 
 @media (max-width: 760px) {
   .shell {
     grid-template-columns: 1fr;
-    gap: 3rem;
-    padding-top: 4rem;
+    gap: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .intro h1 {
+    font-size: clamp(2.8rem, 12vw, 5rem);
+  }
+
+  .form {
+    width: 100%;
+    padding: 1.35rem;
   }
 }

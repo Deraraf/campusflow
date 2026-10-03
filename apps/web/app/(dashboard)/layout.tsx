@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import SiteHeader from "../../components/site-header";
 import { getCurrentUser } from "../../lib/api/server";
 
 function DashboardAuthFallback() {
@@ -38,8 +39,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Suspense fallback={<DashboardAuthFallback />}>
-      <ProtectedDashboard>{children}</ProtectedDashboard>
-    </Suspense>
+    <>
+      <SiteHeader variant="dashboard" />
+      <Suspense fallback={<DashboardAuthFallback />}>
+        <ProtectedDashboard>{children}</ProtectedDashboard>
+      </Suspense>
+    </>
   );
 }

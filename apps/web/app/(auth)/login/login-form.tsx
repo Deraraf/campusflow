@@ -70,7 +70,7 @@ export default function LoginForm() {
           <div>
             <p role="status">{message}</p>
             {isVerificationError ? (
-              <p style={{ marginTop: "0.5rem" }}>
+              <p className={styles.messageLink}>
                 <Link
                   href={
                     email
@@ -85,18 +85,7 @@ export default function LoginForm() {
           </div>
         ) : null}
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "1rem",
-            paddingTop: "1rem",
-            borderTop: "1px solid #dcd7cb",
-            fontSize: "0.85rem",
-            gap: "1rem",
-            flexWrap: "wrap",
-          }}
-        >
+        <nav className={styles.formLinks} aria-label="Account help">
           <Link href="/register">Create an account</Link>
           <Link href="/forgot-password">Forgot password?</Link>
           <Link
@@ -108,7 +97,7 @@ export default function LoginForm() {
           >
             Resend activation email
           </Link>
-        </div>
+        </nav>
       </form>
     </section>
   );

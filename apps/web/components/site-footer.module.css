@@ -1,0 +1,85 @@
+.footer {
+  color: var(--muted-strong);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.8rem 1.5rem;
+  width: min(100%, 1600px);
+  margin: 0 auto;
+  padding: 1.15rem 1.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--foreground);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.mark {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  color: white;
+  background: var(--accent);
+  border-radius: 6px;
+}
+
+.inner p,
+.inner small {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.inner nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.inner nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.inner nav a:hover {
+  color: var(--accent);
+}
+
+.inner small {
+  grid-column: 1 / -1;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+  .inner {
+    grid-template-columns: 1fr auto;
+    padding: 1rem;
+  }
+
+  .inner p {
+    display: none;
+  }
+
+  .inner nav {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+    gap: 0.7rem 1rem;
+  }
+
+  .inner small {
+    margin-top: 0.25rem;
+  }
+}

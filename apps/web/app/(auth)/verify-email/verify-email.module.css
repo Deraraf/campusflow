@@ -1,17 +1,19 @@
 .page {
-  min-height: 100vh;
+  min-height: calc(100svh - 135px);
   display: grid;
   place-items: center;
   padding: 2rem 1.25rem;
-  color: #173042;
-  background: #f4f0e8;
+  color: var(--foreground);
+  background: var(--background);
 }
 
 .card {
   width: min(100%, 620px);
   padding: clamp(1.5rem, 5vw, 3.5rem);
-  border: 1px solid #b9b5aa;
-  background: #fbfaf7;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .header {
@@ -27,7 +29,7 @@
 }
 
 .eyebrow {
-  color: #c45b36;
+  color: var(--accent);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -42,7 +44,7 @@
 
 .message {
   max-width: 520px;
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -56,17 +58,17 @@
   gap: 1.5rem;
   margin-top: 2.5rem;
   padding-top: 2rem;
-  border-top: 1px solid #b9b5aa;
+  border-top: 1px solid var(--border);
 }
 
 .resendSection h2 {
-  color: #173042;
+  color: var(--foreground);
   font-size: 1.25rem;
 }
 
 .resendSection > div > p {
   margin-top: 0.5rem;
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -82,7 +84,7 @@
 }
 
 .field span {
-  color: #173042;
+  color: var(--foreground);
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -91,16 +93,17 @@
   width: 100%;
   min-height: 3.1rem;
   padding: 0.75rem 0.85rem;
-  border: 1px solid #9aa2a4;
+  border: 1px solid var(--border);
+  border-radius: 5px;
   outline: none;
-  color: #173042;
-  background: #fff;
+  color: var(--foreground);
+  background: var(--surface-raised);
   font: inherit;
 }
 
 .field input:focus {
-  border-color: #173042;
-  box-shadow: 0 0 0 3px rgb(23 48 66 / 12%);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .primaryButton {
@@ -110,8 +113,9 @@
   justify-content: center;
   padding: 0.85rem 1.25rem;
   border: 0;
-  color: #fbfaf7;
-  background: #173042;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--accent);
   font: inherit;
   font-weight: 700;
   text-decoration: none;
@@ -119,7 +123,7 @@
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: #23485f;
+  background: var(--accent-strong);
 }
 
 .primaryButton:disabled {
@@ -129,7 +133,7 @@
 
 .secondaryLink {
   width: fit-content;
-  color: #c45b36;
+  color: var(--accent);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -139,7 +143,7 @@
 }
 
 .resendMessage {
-  color: #315d3d;
+  color: var(--success);
   font-size: 0.875rem;
   line-height: 1.5;
 }

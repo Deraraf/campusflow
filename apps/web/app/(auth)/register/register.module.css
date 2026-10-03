@@ -2,10 +2,10 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
   gap: clamp(3rem, 8vw, 8rem);
-  min-height: 100vh;
+  min-height: calc(100svh - 135px);
   padding: clamp(2rem, 6vw, 6rem) clamp(1.5rem, 8vw, 9rem);
-  color: #173042;
-  background: #f4f0e8;
+  color: var(--foreground);
+  background: var(--background);
 }
 
 .intro {
@@ -25,7 +25,7 @@
 
 .eyebrow,
 .formEyebrow {
-  color: #c45b36;
+  color: var(--accent);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -46,7 +46,7 @@
 .description {
   max-width: 480px;
   margin-top: 1.75rem;
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: clamp(1.05rem, 1.5vw, 1.2rem);
   line-height: 1.6;
 }
@@ -54,8 +54,8 @@
 .note {
   max-width: 430px;
   padding-top: 1.25rem;
-  border-top: 1px solid #b9b5aa;
-  color: #5b6870;
+  border-top: 1px solid var(--border);
+  color: var(--muted-strong);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -63,8 +63,10 @@
 .formCard {
   align-self: center;
   padding: clamp(1.5rem, 4vw, 3rem);
-  border: 1px solid #b9b5aa;
-  background: #fbfaf7;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .formHeader {
@@ -73,7 +75,7 @@
 
 .formHeader h2 {
   margin-top: 0.5rem;
-  color: #173042;
+  color: var(--foreground);
   font-size: clamp(1.8rem, 3vw, 2.5rem);
   line-height: 1.1;
   letter-spacing: -0.04em;
@@ -81,7 +83,7 @@
 
 .formHeader p:last-child {
   margin-top: 0.75rem;
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: 0.95rem;
   line-height: 1.5;
 }
@@ -103,7 +105,7 @@
 }
 
 .field > span {
-  color: #173042;
+  color: var(--foreground);
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -112,11 +114,11 @@
   width: 100%;
   min-height: 3.1rem;
   padding: 0.75rem 0.85rem;
-  border: 1px solid #9aa2a4;
-  border-radius: 0;
+  border: 1px solid var(--border);
+  border-radius: 5px;
   outline: none;
-  color: #173042;
-  background: #fff;
+  color: var(--foreground);
+  background: var(--surface-raised);
   font: inherit;
   transition:
     border-color 150ms ease,
@@ -124,12 +126,12 @@
 }
 
 .field input:hover {
-  border-color: #68777d;
+  border-color: var(--muted);
 }
 
 .field input:focus {
-  border-color: #173042;
-  box-shadow: 0 0 0 3px rgb(23 48 66 / 12%);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .field input:disabled {
@@ -138,7 +140,7 @@
 }
 
 .field small {
-  color: #6b7478;
+  color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.4;
 }
@@ -147,9 +149,9 @@
   min-height: 3.25rem;
   margin-top: 0.25rem;
   border: 0;
-  border-radius: 0;
-  color: #fbfaf7;
-  background: #173042;
+  border-radius: 5px;
+  color: #fff;
+  background: var(--accent);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -159,11 +161,11 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background: #23485f;
+  background: var(--accent-strong);
 }
 
 .submitButton:focus-visible {
-  outline: 3px solid rgb(196 91 54 / 35%);
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
   outline-offset: 3px;
 }
 
@@ -181,26 +183,30 @@
 }
 
 .error {
-  border-color: #c47a6a;
-  color: #8a3020;
-  background: #fff4f1;
+  border-color: color-mix(in srgb, var(--danger) 65%, var(--border));
+  color: var(--danger);
+  background: var(--danger-soft);
 }
 
 .success {
-  border-color: #7a9a83;
-  color: #315d3d;
-  background: #f1f8f2;
+  border-color: color-mix(in srgb, var(--success) 55%, var(--border));
+  color: var(--success);
+  background: var(--success-soft);
 }
 
 .loginPrompt {
-  color: #5b6870;
+  color: var(--muted-strong);
   font-size: 0.875rem;
   line-height: 1.5;
   text-align: center;
 }
 
+.loginPromptCompact {
+  margin-top: 0.25rem;
+}
+
 .loginPrompt a {
-  color: #c45b36;
+  color: var(--accent);
   font-weight: 700;
 }
 

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import SiteFooter from "../components/site-footer";
+import { ThemeProvider } from "../components/theme-provider";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -12,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CampusFlow",
-  description: "A focused academic workspace for university communities.",
+  title: "CampusFlow | Ethiopian Public Service University",
+  description: "CampusFlow is an academic workspace for Ethiopian Public Service University.",
 };
 
 export default function RootLayout({
@@ -24,7 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <ThemeProvider>
+          <div className="site-content">{children}</div>
+          <SiteFooter />
+        </ThemeProvider>
       </body>
     </html>
   );

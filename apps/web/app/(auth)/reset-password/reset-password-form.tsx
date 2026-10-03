@@ -45,11 +45,11 @@ export default function ResetPasswordForm() {
   return (
     <section
       style={{
-        minHeight: "100vh",
+        minHeight: "calc(100svh - 135px)",
         display: "grid",
         placeItems: "center",
-        background: "#f4f0e8",
-        color: "#173042",
+        background: "var(--background)",
+        color: "var(--foreground)",
         padding: "2rem",
       }}
     >
@@ -57,18 +57,18 @@ export default function ResetPasswordForm() {
         style={{
           width: "100%",
           maxWidth: "420px",
-          background: "#fff",
-          border: "1px solid #dcd7cb",
-          borderRadius: "18px",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "8px",
           padding: "2rem",
-          boxShadow: "0 8px 24px rgba(23, 48, 66, 0.08)",
+          boxShadow: "var(--shadow)",
         }}
       >
-        <p style={{ margin: 0, color: "#c45b36", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontSize: "0.75rem" }}>
+        <p style={{ margin: 0, color: "var(--accent)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", fontSize: "0.75rem" }}>
           CampusFlow
         </p>
         <h1 style={{ margin: "0.6rem 0 0.5rem", fontSize: "2rem" }}>Reset your password</h1>
-        <p style={{ margin: "0 0 1.5rem", color: "#4b5a67" }}>
+        <p style={{ margin: "0 0 1.5rem", color: "var(--muted-strong)" }}>
           Choose a new password for your account.
         </p>
 
@@ -82,7 +82,7 @@ export default function ResetPasswordForm() {
               required
               type="password"
               value={password}
-              style={{ padding: "0.8rem 0.9rem", borderRadius: "10px", border: "1px solid #dcd7cb" }}
+              style={{ padding: "0.8rem 0.9rem", borderRadius: "5px", border: "1px solid var(--border)", color: "var(--foreground)", background: "var(--surface-raised)" }}
             />
           </label>
 
@@ -92,8 +92,8 @@ export default function ResetPasswordForm() {
             style={{
               padding: "0.9rem 1rem",
               border: "none",
-              borderRadius: "10px",
-              background: "#173042",
+              borderRadius: "5px",
+              background: "var(--accent)",
               color: "#fff",
               cursor: isSubmitting || isSuccess ? "not-allowed" : "pointer",
               fontWeight: 700,
@@ -107,9 +107,10 @@ export default function ResetPasswordForm() {
               role={isSuccess ? "status" : "alert"}
               style={{
                 margin: 0,
-                color: isSuccess ? "#1b6d4d" : "#8f2c2c",
-                background: isSuccess ? "#edf7f2" : "#fbeaea",
-                borderRadius: "10px",
+                color: isSuccess ? "var(--success)" : "var(--danger)",
+                background: isSuccess ? "var(--success-soft)" : "var(--danger-soft)",
+                border: "1px solid var(--border)",
+                borderRadius: "5px",
                 padding: "0.8rem 0.9rem",
               }}
             >
@@ -119,7 +120,7 @@ export default function ResetPasswordForm() {
         </form>
 
         <p style={{ marginTop: "1.25rem", fontSize: "0.9rem" }}>
-          <Link href="/login">← Back to sign in</Link>
+          <Link href="/login" style={{ color: "var(--accent)" }}>← Back to sign in</Link>
         </p>
       </div>
     </section>

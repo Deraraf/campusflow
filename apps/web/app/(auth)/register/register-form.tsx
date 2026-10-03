@@ -135,10 +135,9 @@ export default function RegisterForm() {
             >
               <p>{message}</p>
               {!isSuccess && message.toLowerCase().includes("pending verification") ? (
-                <p style={{ marginTop: "0.5rem" }}>
+                <p className={styles.messageLink}>
                   <Link
                     href={`/resend-verification?email=${encodeURIComponent(email.trim().toLowerCase())}`}
-                    style={{ color: "#c45b36", fontWeight: "bold" }}
                   >
                     Resend verification email →
                   </Link>
@@ -159,7 +158,7 @@ export default function RegisterForm() {
             Already have an account? <Link href="/login">Sign in</Link>
           </p>
 
-          <p className={styles.loginPrompt} style={{ marginTop: "0.25rem" }}>
+          <p className={`${styles.loginPrompt} ${styles.loginPromptCompact}`}>
             Need to reset your password? <Link href="/forgot-password">Reset it here</Link>
           </p>
         </form>
