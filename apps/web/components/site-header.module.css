@@ -5,6 +5,7 @@
   color: var(--foreground);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 10%, transparent);
 }
 
 .bar {
