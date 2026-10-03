@@ -28,14 +28,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    const favicon = document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
+    const isDarkTheme = theme === "dark";
 
-    if (favicon) {
-      favicon.href =
-        theme === "dark"
-          ? "/epsu%20logo%20dark.png"
-          : "/epsu%20logo%20light.jpg";
+    function syncFavicons() {
+      document
+        .querySelectorAll<HTMLLinkElement>('link[rel~="icon"]')
+        .forEach((favicon) => {
+          favicon.type = isDarkTheme ? "image/png" : "image/jpeg";
+          favicon.setAttribute("sizes", isDarkTheme ? "138x134" : "225x225");
+          favicon.href = isDarkTheme
+            ? "/epsu%20logo%20dark.png"
+            : "/epsu%20logo%20light.jpg";
+        });
     }
+
+    syncFavicons();
+    const observer = new MutationObserver(syncFavicons);
+    observer.observe(document.head, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
   }, [theme]);
 
   function toggleTheme() {
