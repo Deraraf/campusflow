@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Dashboard routes require an authenticated session cookie.
-// Auth routes (login, register, verify-email) redirect already-authenticated
-// users away from those pages and back to the dashboard.
-const DASHBOARD_PREFIX = "/dashboard";
+// Protected student and instructor routes require an authenticated session cookie.
+// Auth routes redirect already-authenticated users away from those pages and back
+// to the student dashboard.
+const PROTECTED_PREFIXES = ["/student", "/instructer"];
 const AUTH_PATHS = new Set([
   "/login",
   "/register",
@@ -18,26 +18,27 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hasCookie = request.cookies.has("access_token");
 
-  // Guard dashboard: no cookie → redirect to /login
-  if (pathname.startsWith(DASHBOARD_PREFIX) && !hasCookie) {
+  // Guard protected dashboard routes: no cookie → redirect to /login
+  if (PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix)) && !hasCookie) {
     const loginUrl = new URL("/login", request.url);
     // Preserve the original destination so we can redirect back after login
     loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Guard auth pages: already has cookie → redirect to /dashboard
+  // Guard auth pages: already has cookie → redirect to /student
   if (AUTH_PATHS.has(pathname) && hasCookie) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/student", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  // Run on dashboard and auth pages; skip API routes, static assets, images
+  // Run on protected dashboard routes and auth pages; skip API routes, static assets, images
   matcher: [
-    "/dashboard/:path*",
+    "/student/:path*",
+    "/instructer/:path*",
     "/login",
     "/register",
     "/verify-email",

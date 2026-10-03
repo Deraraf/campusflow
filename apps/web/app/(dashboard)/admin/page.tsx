@@ -168,7 +168,7 @@ export default async function AdminDashboardPage() {
   const user = await getCurrentUser();
 
   if (user?.role !== "ADMIN") {
-    redirect("/dashboard");
+    redirect("/student");
   }
 
   const adminName = [user.firstName, user.lastName].filter(Boolean).join(" ");
