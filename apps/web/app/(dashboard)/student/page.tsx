@@ -24,6 +24,7 @@ import Link from "next/link";
 import { getCurrentUser } from "../../../lib/api/server";
 import LogoutButton from "../../(auth)/logout-button";
 import styles from "./dashboard.module.css";
+import { redirect } from "next/navigation";
 
 const courses = [
   { code: "CS 301", name: "Distributed Systems", instructor: "Prof. Marcus Sterling", units: "4.0 units", grade: "A", score: "94.2%", attendance: 96, tone: "blue" },
@@ -88,6 +89,14 @@ function NavigationGroup({
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
+
+  if(!user) {
+    redirect("/login");
+  }
+
+  if (user?.role !== "STUDENT") {
+    redirect("/instructor");
+  }
   const displayName = user?.firstName || "Student";
 
   return (

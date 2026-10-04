@@ -14,8 +14,8 @@ export default function SiteFooter() {
         </Link>
         <p>One clear place for the whole campus.</p>
         <nav aria-label="Footer navigation">
-          <Link href="/dashboard#courses">Courses</Link>
-          <Link href="/dashboard#campus-services">Campus services</Link>
+          <Link href="/student#courses">Courses</Link>
+          <Link href="/student#campus-services">Campus services</Link>
           <Link href="/login">
             Student access <ArrowUpRight size={13} />
           </Link>

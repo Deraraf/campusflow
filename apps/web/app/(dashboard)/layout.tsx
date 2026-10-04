@@ -1,23 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import SiteHeader from "../../components/site-header";
+import DashboardAuthFallback from "../../components/dashboard/dashboard-auth-fallback";
 import { getCurrentUser } from "../../lib/api/server";
-
-function DashboardAuthFallback() {
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeItems: "center",
-        padding: "2rem",
-        color: "#173042",
-      }}
-    >
-      <p>Checking your session...</p>
-    </main>
-  );
-}
 
 async function ProtectedDashboard({
   children,
@@ -39,11 +23,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <SiteHeader variant="dashboard" />
-      <Suspense fallback={<DashboardAuthFallback />}>
-        <ProtectedDashboard>{children}</ProtectedDashboard>
-      </Suspense>
-    </>
+    <Suspense fallback={<DashboardAuthFallback />}>
+      <ProtectedDashboard>{children}</ProtectedDashboard>
+    </Suspense>
   );
 }

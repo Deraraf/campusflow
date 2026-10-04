@@ -16,8 +16,8 @@ export type HeaderVariant = "public" | "dashboard" | "auth";
 
 const publicNavigation = [
   { label: "Home", href: "/" },
-  { label: "Courses", href: "/dashboard#courses" },
-  { label: "Campus life", href: "/dashboard#campus-services" },
+  { label: "Courses", href: "/student#courses" },
+  { label: "Campus life", href: "/student#campus-services" },
 ];
 
 const authNavigation = [{ label: "Home", href: "/" }];
@@ -88,14 +88,14 @@ async function RenderedHeader({ variant }: { variant: HeaderVariant }) {
             <>
               <Link
                 className={styles.notification}
-                href="/dashboard#assignments"
+                href="/student#assignments"
                 aria-label="3 unread notifications"
                 title="Notifications"
               >
                 <Bell size={18} />
                 <span className={styles.notificationCount}>3</span>
               </Link>
-              <Link className={styles.profile} href="/dashboard" aria-label="Open student profile">
+              <Link className={styles.profile} href="/student" aria-label="Open student profile">
               <span className={styles.avatar}>S</span>
               <span className={styles.profileText}>
                   <strong>Student View</strong>
