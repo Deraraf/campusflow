@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { GraduationCap } from "lucide-react";
 import MobileNavigation from "./mobile-navigation";
@@ -7,8 +8,12 @@ import styles from "./dashboard-shell.module.css";
 
 export default function DashboardHeader({
   navigation,
+  userName,
+  mobileFooter,
 }: Readonly<{
   navigation: readonly DashboardNavigationGroup[];
+  userName?: string;
+  mobileFooter?: ReactNode;
 }>) {
   return (
     <header className={styles.header}>
@@ -22,8 +27,9 @@ export default function DashboardHeader({
         </span>
       </Link>
       <div className={styles.headerActions}>
+        {userName ? <span className={styles.userName}>{userName}</span> : null}
         <ThemeToggle className={`${styles.iconButton} ${styles.themeButton}`} />
-        <MobileNavigation groups={navigation} />
+        <MobileNavigation groups={navigation}>{mobileFooter}</MobileNavigation>
       </div>
     </header>
   );

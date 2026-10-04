@@ -54,6 +54,16 @@
   letter-spacing: 0.08em;
 }
 
+.userName {
+  max-width: 15rem;
+  overflow: hidden;
+  color: var(--muted-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .headerActions {
   display: flex;
   align-items: center;
@@ -72,13 +82,47 @@
 
 .sidebar {
   position: sticky;
+  display: flex;
   top: 68px;
   align-self: start;
+  flex-direction: column;
   height: calc(100svh - 68px);
   overflow-y: auto;
   padding: 1.4rem 0.9rem;
   background: var(--surface);
   border-right: 1px solid var(--border);
+}
+
+.sidebarFooter,
+.mobileFooter {
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.sidebarFooter {
+  margin-top: auto;
+}
+
+.sidebarFooter :global(button),
+.mobileFooter :global(button) {
+  width: 100%;
+  min-height: 38px;
+  padding: 0.5rem 0.6rem;
+  color: var(--muted-strong);
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 550;
+}
+
+.sidebarFooter :global(button:hover),
+.mobileFooter :global(button:hover) {
+  color: var(--danger);
+  background: var(--surface-subtle);
+  border-color: var(--border);
 }
 
 .navGroup + .navGroup {
@@ -197,6 +241,11 @@
 @media (max-width: 420px) {
   .brandText small {
     display: none;
+  }
+
+  .userName {
+    max-width: 7rem;
+    font-size: 0.72rem;
   }
 }
 

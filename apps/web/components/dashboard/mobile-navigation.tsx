@@ -2,14 +2,17 @@
 
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import type { DashboardNavigationGroup } from "./sidebar";
 import styles from "./dashboard-shell.module.css";
 
 export default function MobileNavigation({
   groups,
+  children,
 }: Readonly<{
   groups: readonly DashboardNavigationGroup[];
+  children?: ReactNode;
 }>) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -53,6 +56,7 @@ export default function MobileNavigation({
             </ul>
           </section>
         ))}
+        {children ? <div className={styles.mobileFooter}>{children}</div> : null}
       </nav>
     </div>
   );
