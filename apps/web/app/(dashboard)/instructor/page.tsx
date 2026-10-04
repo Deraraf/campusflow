@@ -4,6 +4,9 @@ import { getCurrentUser } from "../../../lib/api/server";
 export default async function InstructorDashboardPage() {
   const user = await getCurrentUser();
 
+  if(!user) {
+    redirect("/login");
+  }
   if (user?.role !== "INSTRUCTOR") {
     redirect("/student");
   }

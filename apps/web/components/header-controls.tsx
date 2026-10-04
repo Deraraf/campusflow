@@ -1,10 +1,10 @@
 "use client";
 
-import { Bell, Menu, Moon, Search, Sun, UserRound, X } from "lucide-react";
+import { Bell, Menu, Search, UserRound, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { HeaderVariant } from "./site-header";
-import { useTheme } from "./theme-provider";
+import ThemeToggle from "./theme-toggle";
 import styles from "./site-header.module.css";
 
 const publicNavigation = [
@@ -36,7 +36,6 @@ export default function HeaderControls({
   variant: HeaderVariant;
   isAuthenticated: boolean;
 }) {
-  const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const navigation =
     variant === "dashboard"
@@ -47,15 +46,7 @@ export default function HeaderControls({
 
   return (
     <>
-      <button
-        className={styles.themeButton}
-        type="button"
-        onClick={toggleTheme}
-        aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-        title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-      >
-        {theme === "light" ? <Moon size={17} /> : <Sun size={17} />}
-      </button>
+      <ThemeToggle className={styles.themeButton} />
       <button
         className={styles.menuButton}
         type="button"
