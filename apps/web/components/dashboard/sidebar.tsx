@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import styles from "./dashboard-shell.module.css";
 
@@ -13,8 +14,10 @@ export type DashboardNavigationGroup = Readonly<{
 
 export default function DashboardSidebar({
   groups,
+  footer,
 }: Readonly<{
   groups: readonly DashboardNavigationGroup[];
+  footer?: ReactNode;
 }>) {
   return (
     <aside className={styles.sidebar} aria-label="Dashboard sidebar">
@@ -34,6 +37,7 @@ export default function DashboardSidebar({
           </section>
         ))}
       </nav>
+      {footer ? <div className={styles.sidebarFooter}>{footer}</div> : null}
     </aside>
   );
 }

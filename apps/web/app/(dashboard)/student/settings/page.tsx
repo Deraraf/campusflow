@@ -1,5 +1,5 @@
 import StudentSectionPage from "../../../../components/dashboard/student/student-section-page";
 
-export default function CoursesPage() {
-  return <StudentSectionPage title="Courses" />;
+export default function SettingsPage() {
+  return <StudentSectionPage title="Settings" />;
 }
