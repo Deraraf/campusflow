@@ -270,11 +270,26 @@ model AccessCredential {
 // DEPARTMENT
 // ============================================================
 
-model Department {
-  id   String @id @default(uuid())
-  name String @unique
-  code String @unique
+model College {
+  id        String  @id @default(uuid())
+  name      String  @unique
+  code      String  @unique
+  deanId    String? @unique
 
+  departments Department[] @relation("CollegeDepartments")
+  dean        Instructor?  @relation("CollegeDean", fields: [deanId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model Department {
+  id        String @id @default(uuid())
+  name      String @unique
+  code      String @unique
+  collegeId String
+
+  college     College      @relation("CollegeDepartments", fields: [collegeId], references: [id])
   instructors Instructor[]
   programs    Program[]
 
@@ -295,6 +310,7 @@ model Instructor {
 
   user        User         @relation(fields: [userId], references: [id])
   department Department   @relation(fields: [departmentId], references: [id])
+  deanOfCollege College?   @relation("CollegeDean")
   offerings   CourseOffering[]
   assignments Assignment[]
   exams       Exam[]

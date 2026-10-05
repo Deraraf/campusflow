@@ -24,6 +24,10 @@
       "model": "Attendance",
       "namespace": "public"
     },
+    "college": {
+      "model": "College",
+      "namespace": "public"
+    },
     "conversation": {
       "model": "Conversation",
       "namespace": "public"
@@ -956,6 +960,108 @@
               "table": "attendance"
             }
           },
+          "College": {
+            "fields": {
+              "code": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "deanId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "dean": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "deanId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Instructor",
+                  "namespace": "public"
+                }
+              },
+              "departments": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "collegeId"
+                  ]
+                },
+                "to": {
+                  "model": "Department",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "code": {
+                  "column": "code"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "deanId": {
+                  "column": "deanId"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "college"
+            }
+          },
           "Conversation": {
             "fields": {
               "createdAt": {
@@ -1521,6 +1627,13 @@
                   "kind": "scalar"
                 }
               },
+              "collegeId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -1551,6 +1664,21 @@
               }
             },
             "relations": {
+              "college": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "collegeId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "College",
+                  "namespace": "public"
+                }
+              },
               "instructors": {
                 "cardinality": "1:N",
                 "on": {
@@ -1586,6 +1714,9 @@
               "fields": {
                 "code": {
                   "column": "code"
+                },
+                "collegeId": {
+                  "column": "collegeId"
                 },
                 "createdAt": {
                   "column": "createdAt"
@@ -2116,6 +2247,21 @@
                 },
                 "to": {
                   "model": "Assignment",
+                  "namespace": "public"
+                }
+              },
+              "deanOfCollege": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "deanId"
+                  ]
+                },
+                "to": {
+                  "model": "College",
                   "namespace": "public"
                 }
               },
@@ -4192,6 +4338,85 @@
                 }
               ]
             },
+            "college": {
+              "columns": {
+                "code": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "deanId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "deanId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "college"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "instructor"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "name"
+                  ]
+                },
+                {
+                  "columns": [
+                    "code"
+                  ]
+                },
+                {
+                  "columns": [
+                    "deanId"
+                  ]
+                }
+              ]
+            },
             "conversation": {
               "columns": {
                 "createdAt": {
@@ -4607,6 +4832,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "collegeId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -4632,8 +4862,34 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "collegeId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "department"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "college"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "collegeId"
+                  ],
+                  "name": "department_collegeId_idx_3772120b",
+                  "prefix": "department_collegeId_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -6387,10 +6643,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "0401449c476671558a41e98430f6d8a780fd3021ca4de357ca1e915758c17631"
+    "storageHash": "f9486990261512970f57d58a344f3495d4be84d74a6fa200959a0eaf8f0b1183"
   },
   "execution": {
-    "executionHash": "c900bf8e20f2664942ea23e6f37339e0c33bcacfb465330a23080500d5c9589c",
+    "executionHash": "477ff403ae9a00b5114efb5b91a0257e708591747c8c9a811325e27799ec02ff",
     "mutations": {
       "defaults": [
         {
@@ -6521,6 +6777,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "attendance"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "college"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "college"
           }
         },
         {
