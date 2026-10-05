@@ -305,6 +305,44 @@ model Instructor {
 
 
 // ============================================================
+// ACADEMIC YEAR / TERM
+// ============================================================
+
+model AcademicYear {
+  id        String @id @default(uuid())
+  name      String @unique
+  startDate TimestamptzString
+  endDate   TimestamptzString
+  isCurrent Boolean @default(false)
+
+  terms AcademicTerm[]
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([isCurrent])
+}
+
+model AcademicTerm {
+  id             String   @id @default(uuid())
+  academicYearId String
+  semester       Semester
+  startDate      TimestamptzString
+  endDate        TimestamptzString
+  isCurrent      Boolean  @default(false)
+
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([academicYearId, semester])
+  @@index([isCurrent])
+  @@index([academicYearId, isCurrent])
+}
+
+
+// ============================================================
 // PROGRAM
 // ============================================================
 
