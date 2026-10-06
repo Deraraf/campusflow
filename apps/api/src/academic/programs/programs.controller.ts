@@ -15,8 +15,8 @@ import { CreateCurriculumCourseDto } from './dto/create-curriculum-course.dto.js
 import { CreateProgramDto } from './dto/create-program.dto.js';
 import { UpdateCurriculumCourseDto } from './dto/update-curriculum-course.dto.js';
 import { UpdateProgramDto } from './dto/update-program.dto.js';
-import { CurriculumService } from './curriculum.service.js';
-import { ProgramsService } from './programs.service.js';
+import { CurriculumService } from './curriculum.service';
+import { ProgramsService } from './programs.service';
 
 @Controller('programs')
 @UseGuards(JwtAuthGuard, RolesGuard)
