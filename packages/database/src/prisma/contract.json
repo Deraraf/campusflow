@@ -1641,6 +1641,13 @@
                   "kind": "scalar"
                 }
               },
+              "headInstructorId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -1676,6 +1683,21 @@
                 },
                 "to": {
                   "model": "College",
+                  "namespace": "public"
+                }
+              },
+              "head": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "headInstructorId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Instructor",
                   "namespace": "public"
                 }
               },
@@ -1720,6 +1742,9 @@
                 },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "headInstructorId": {
+                  "column": "headInstructorId"
                 },
                 "id": {
                   "column": "id"
@@ -2280,6 +2305,21 @@
                   "namespace": "public"
                 }
               },
+              "departmentHeadOf": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "headInstructorId"
+                  ]
+                },
+                "to": {
+                  "model": "Department",
+                  "namespace": "public"
+                }
+              },
               "exams": {
                 "cardinality": "1:N",
                 "on": {
@@ -2307,6 +2347,21 @@
                 },
                 "to": {
                   "model": "CourseOffering",
+                  "namespace": "public"
+                }
+              },
+              "programCoordinatorOf": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "coordinatorInstructorId"
+                  ]
+                },
+                "to": {
+                  "model": "Program",
                   "namespace": "public"
                 }
               },
@@ -2740,6 +2795,13 @@
                   "kind": "scalar"
                 }
               },
+              "coordinatorInstructorId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -2777,6 +2839,21 @@
               }
             },
             "relations": {
+              "coordinator": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "coordinatorInstructorId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Instructor",
+                  "namespace": "public"
+                }
+              },
               "curriculumCourses": {
                 "cardinality": "1:N",
                 "on": {
@@ -2842,6 +2919,9 @@
               "fields": {
                 "code": {
                   "column": "code"
+                },
+                "coordinatorInstructorId": {
+                  "column": "coordinatorInstructorId"
                 },
                 "createdAt": {
                   "column": "createdAt"
@@ -4846,6 +4926,11 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
+                "headInstructorId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "id": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -4878,6 +4963,22 @@
                     "namespaceId": "public",
                     "tableName": "college"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "headInstructorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "department"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "instructor"
+                  }
                 }
               ],
               "indexes": [
@@ -4904,6 +5005,11 @@
                 {
                   "columns": [
                     "code"
+                  ]
+                },
+                {
+                  "columns": [
+                    "headInstructorId"
                   ]
                 }
               ]
@@ -5780,6 +5886,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "coordinatorInstructorId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -5826,6 +5937,22 @@
                     "namespaceId": "public",
                     "tableName": "department"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "coordinatorInstructorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "program"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "instructor"
+                  }
                 }
               ],
               "indexes": [
@@ -5847,6 +5974,11 @@
                 {
                   "columns": [
                     "code"
+                  ]
+                },
+                {
+                  "columns": [
+                    "coordinatorInstructorId"
                   ]
                 }
               ]
@@ -6643,7 +6775,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "f9486990261512970f57d58a344f3495d4be84d74a6fa200959a0eaf8f0b1183"
+    "storageHash": "e978fded2192646add0c34bc6ded4f95207dc0332c3e5fa280d661913e0643fd"
   },
   "execution": {
     "executionHash": "477ff403ae9a00b5114efb5b91a0257e708591747c8c9a811325e27799ec02ff",

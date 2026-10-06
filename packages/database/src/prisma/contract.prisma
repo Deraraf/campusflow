@@ -284,12 +284,14 @@ model College {
 }
 
 model Department {
-  id        String @id @default(uuid())
-  name      String @unique
-  code      String @unique
-  collegeId String
+  id               String  @id @default(uuid())
+  name             String  @unique
+  code             String  @unique
+  collegeId        String
+  headInstructorId String? @unique
 
   college     College      @relation("CollegeDepartments", fields: [collegeId], references: [id])
+  head        Instructor?  @relation("DepartmentHead", fields: [headInstructorId], references: [id])
   instructors Instructor[]
   programs    Program[]
 
@@ -311,6 +313,8 @@ model Instructor {
   user        User         @relation(fields: [userId], references: [id])
   department Department   @relation(fields: [departmentId], references: [id])
   deanOfCollege College?   @relation("CollegeDean")
+  departmentHeadOf Department? @relation("DepartmentHead")
+  programCoordinatorOf Program? @relation("ProgramCoordinator")
   offerings   CourseOffering[]
   assignments Assignment[]
   exams       Exam[]
@@ -363,12 +367,15 @@ model AcademicTerm {
 // ============================================================
 
 model Program {
-  id           String @id @default(uuid())
-  name         String
-  code         String @unique
-  departmentId String
+  id                      String  @id @default(uuid())
+  name                    String
+  code                    String  @unique
+  departmentId            String
+  coordinatorInstructorId String? @unique
 
-  department          Department           @relation(fields: [departmentId], references: [id])
+  department  Department  @relation(fields: [departmentId], references: [id])
+  coordinator Instructor? @relation("ProgramCoordinator", fields: [coordinatorInstructorId], references: [id])
+
   curriculumCourses   CurriculumCourse[]
   students            Student[]
   studentApplications StudentApplication[]
