@@ -16,6 +16,16 @@ enum Semester {
   SUMMER
 }
 
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
 enum CourseType {
   CORE
   ELECTIVE
@@ -154,18 +164,21 @@ model PasswordResetToken {
 // ============================================================
 
 model Student {
-  id            String        @id @default(uuid())
-  userId        String        @unique
-  studentNumber String        @unique
-  programId     String
-  status        StudentStatus @default(ACTIVE)
+  id                     String        @id @default(uuid())
+  userId                 String        @unique
+  studentNumber          String        @unique
+  programId              String
+  admissionAcademicYearId String
+  status                 StudentStatus @default(ACTIVE)
 
-  user        User         @relation(fields: [userId], references: [id])
-  program     Program      @relation(fields: [programId], references: [id])
-  enrollments Enrollment[]
-  submissions Submission[]
-  grades      Grade[]
-  attendance  Attendance[]
+  user                  User         @relation(fields: [userId], references: [id])
+  program               Program      @relation(fields: [programId], references: [id])
+  admissionAcademicYear AcademicYear @relation("StudentAdmissionAcademicYear", fields: [admissionAcademicYearId], references: [id])
+  enrollments           Enrollment[]
+  submissions           Submission[]
+  grades                Grade[]
+  attendance            Attendance[]
+  academicStandings    StudentAcademicStanding[]
 
   application StudentApplication?
 
@@ -175,6 +188,23 @@ model Student {
 
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
+}
+
+model StudentAcademicStanding {
+  id            String @id @default(uuid())
+  studentId     String
+  academicTermId String
+  programYear   Int
+
+  student     Student     @relation(fields: [studentId], references: [id])
+  academicTerm AcademicTerm @relation("AcademicTermStudentStandings", fields: [academicTermId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([studentId, academicTermId])
+  @@index([studentId])
+  @@index([academicTermId])
 }
 
 // ============================================================
@@ -270,11 +300,28 @@ model AccessCredential {
 // DEPARTMENT
 // ============================================================
 
-model Department {
-  id   String @id @default(uuid())
-  name String @unique
-  code String @unique
+model College {
+  id        String  @id @default(uuid())
+  name      String  @unique
+  code      String  @unique
+  deanId    String? @unique
 
+  departments Department[] @relation("CollegeDepartments")
+  dean        Instructor?  @relation("CollegeDean", fields: [deanId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model Department {
+  id               String  @id @default(uuid())
+  name             String  @unique
+  code             String  @unique
+  collegeId        String
+  headInstructorId String? @unique
+
+  college     College      @relation("CollegeDepartments", fields: [collegeId], references: [id])
+  head        Instructor?  @relation("DepartmentHead", fields: [headInstructorId], references: [id])
   instructors Instructor[]
   programs    Program[]
 
@@ -295,6 +342,9 @@ model Instructor {
 
   user        User         @relation(fields: [userId], references: [id])
   department Department   @relation(fields: [departmentId], references: [id])
+  deanOfCollege College?   @relation("CollegeDean")
+  departmentHeadOf Department? @relation("DepartmentHead")
+  programCoordinatorOf Program? @relation("ProgramCoordinator")
   offerings   CourseOffering[]
   assignments Assignment[]
   exams       Exam[]
@@ -305,16 +355,61 @@ model Instructor {
 
 
 // ============================================================
+// ACADEMIC YEAR / TERM
+// ============================================================
+
+model AcademicYear {
+  id        String @id @default(uuid())
+  name      String @unique
+  startDate TimestamptzString
+  endDate   TimestamptzString
+  isCurrent Boolean @default(false)
+
+  terms           AcademicTerm[]            @relation("AcademicYearTerms")
+  studentsAdmitted Student[]                 @relation("StudentAdmissionAcademicYear")
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@index([isCurrent])
+}
+
+model AcademicTerm {
+  id             String   @id @default(uuid())
+  academicYearId String
+  semester       Semester
+  startDate      TimestamptzString
+  endDate        TimestamptzString
+  isCurrent      Boolean  @default(false)
+
+  academicYear     AcademicYear               @relation("AcademicYearTerms", fields: [academicYearId], references: [id])
+  courseOfferings  CourseOffering[]           @relation("AcademicTermCourseOfferings")
+  studentStandings StudentAcademicStanding[] @relation("AcademicTermStudentStandings")
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([academicYearId, semester])
+  @@index([isCurrent])
+  @@index([academicYearId, isCurrent])
+}
+
+
+// ============================================================
 // PROGRAM
 // ============================================================
 
 model Program {
-  id           String @id @default(uuid())
-  name         String
-  code         String @unique
-  departmentId String
+  id                      String  @id @default(uuid())
+  name                    String
+  code                    String  @unique
+  departmentId            String
+  durationYears           Int
+  coordinatorInstructorId String? @unique
 
-  department          Department           @relation(fields: [departmentId], references: [id])
+  department  Department  @relation(fields: [departmentId], references: [id])
+  coordinator Instructor? @relation("ProgramCoordinator", fields: [coordinatorInstructorId], references: [id])
+
   curriculumCourses   CurriculumCourse[]
   students            Student[]
   studentApplications StudentApplication[]
@@ -371,19 +466,19 @@ model CurriculumCourse {
 // ============================================================
 
 model CourseOffering {
-  id         String @id @default(uuid())
-  courseId   String
-  instructorId String
+  id             String @id @default(uuid())
+  courseId       String
+  instructorId   String
+  academicTermId String
 
-  academicYear Int
-  semester     Semester
-  section      String
-  room        String?
-  capacity    Int?
+  section   String
+  capacity  Int?
 
-  course     Course     @relation(fields: [courseId], references: [id])
-  instructor Instructor @relation(fields: [instructorId], references: [id])
+  academicTerm AcademicTerm @relation("AcademicTermCourseOfferings", fields: [academicTermId], references: [id])
+  course       Course       @relation(fields: [courseId], references: [id])
+  instructor   Instructor   @relation(fields: [instructorId], references: [id])
 
+  meetings    CourseMeeting[]
   enrollments Enrollment[]
   assignments Assignment[]
   exams       Exam[]
@@ -392,7 +487,27 @@ model CourseOffering {
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
 
-  @@unique([courseId, academicYear, semester, section])
+  @@unique([courseId, academicTermId, section])
+  @@index([academicTermId])
+  @@index([instructorId])
+}
+
+model CourseMeeting {
+  id         String @id @default(uuid())
+  offeringId String
+  dayOfWeek  DayOfWeek
+  startTime  String
+  endTime    String
+  room       String?
+
+  offering CourseOffering @relation(fields: [offeringId], references: [id])
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  @@unique([offeringId, dayOfWeek, startTime, endTime])
+  @@index([offeringId])
+  @@index([dayOfWeek])
 }
 
 

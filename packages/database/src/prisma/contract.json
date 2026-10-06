@@ -4,6 +4,14 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "academicTerm": {
+      "model": "AcademicTerm",
+      "namespace": "public"
+    },
+    "academicYear": {
+      "model": "AcademicYear",
+      "namespace": "public"
+    },
     "accessCredential": {
       "model": "AccessCredential",
       "namespace": "public"
@@ -16,12 +24,20 @@
       "model": "Attendance",
       "namespace": "public"
     },
+    "college": {
+      "model": "College",
+      "namespace": "public"
+    },
     "conversation": {
       "model": "Conversation",
       "namespace": "public"
     },
     "course": {
       "model": "Course",
+      "namespace": "public"
+    },
+    "courseMeeting": {
+      "model": "CourseMeeting",
       "namespace": "public"
     },
     "courseOffering": {
@@ -78,6 +94,10 @@
     },
     "student": {
       "model": "Student",
+      "namespace": "public"
+    },
+    "studentAcademicStanding": {
+      "model": "StudentAcademicStanding",
       "namespace": "public"
     },
     "studentApplication": {
@@ -216,6 +236,39 @@
               {
                 "name": "GENERAL",
                 "value": "GENERAL"
+              }
+            ]
+          },
+          "DayOfWeek": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "MONDAY",
+                "value": "MONDAY"
+              },
+              {
+                "name": "TUESDAY",
+                "value": "TUESDAY"
+              },
+              {
+                "name": "WEDNESDAY",
+                "value": "WEDNESDAY"
+              },
+              {
+                "name": "THURSDAY",
+                "value": "THURSDAY"
+              },
+              {
+                "name": "FRIDAY",
+                "value": "FRIDAY"
+              },
+              {
+                "name": "SATURDAY",
+                "value": "SATURDAY"
+              },
+              {
+                "name": "SUNDAY",
+                "value": "SUNDAY"
               }
             ]
           },
@@ -360,6 +413,261 @@
           }
         },
         "models": {
+          "AcademicTerm": {
+            "fields": {
+              "academicYearId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "endDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "isCurrent": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "semester": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "Semester",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "startDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "academicYear": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "academicYearId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "AcademicYear",
+                  "namespace": "public"
+                }
+              },
+              "courseOfferings": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "academicTermId"
+                  ]
+                },
+                "to": {
+                  "model": "CourseOffering",
+                  "namespace": "public"
+                }
+              },
+              "studentStandings": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "academicTermId"
+                  ]
+                },
+                "to": {
+                  "model": "StudentAcademicStanding",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "academicYearId": {
+                  "column": "academicYearId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "endDate": {
+                  "column": "endDate"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "isCurrent": {
+                  "column": "isCurrent"
+                },
+                "semester": {
+                  "column": "semester"
+                },
+                "startDate": {
+                  "column": "startDate"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "academicTerm"
+            }
+          },
+          "AcademicYear": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "endDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "isCurrent": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "startDate": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "studentsAdmitted": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "admissionAcademicYearId"
+                  ]
+                },
+                "to": {
+                  "model": "Student",
+                  "namespace": "public"
+                }
+              },
+              "terms": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "academicYearId"
+                  ]
+                },
+                "to": {
+                  "model": "AcademicTerm",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "endDate": {
+                  "column": "endDate"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "isCurrent": {
+                  "column": "isCurrent"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "startDate": {
+                  "column": "startDate"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "academicYear"
+            }
+          },
           "AccessCredential": {
             "fields": {
               "createdAt": {
@@ -738,6 +1046,108 @@
               "table": "attendance"
             }
           },
+          "College": {
+            "fields": {
+              "code": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "deanId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "dean": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "deanId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Instructor",
+                  "namespace": "public"
+                }
+              },
+              "departments": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "collegeId"
+                  ]
+                },
+                "to": {
+                  "model": "Department",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "code": {
+                  "column": "code"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "deanId": {
+                  "column": "deanId"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "college"
+            }
+          },
           "Conversation": {
             "fields": {
               "createdAt": {
@@ -932,12 +1342,125 @@
               "table": "course"
             }
           },
-          "CourseOffering": {
+          "CourseMeeting": {
             "fields": {
-              "academicYear": {
+              "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/int4@1",
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "dayOfWeek": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "DayOfWeek",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "endTime": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "offeringId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "room": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "startTime": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "offering": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "offeringId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "CourseOffering",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "dayOfWeek": {
+                  "column": "dayOfWeek"
+                },
+                "endTime": {
+                  "column": "endTime"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "offeringId": {
+                  "column": "offeringId"
+                },
+                "room": {
+                  "column": "room"
+                },
+                "startTime": {
+                  "column": "startTime"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "courseMeeting"
+            }
+          },
+          "CourseOffering": {
+            "fields": {
+              "academicTermId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -976,31 +1499,11 @@
                   "kind": "scalar"
                 }
               },
-              "room": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
               "section": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
-                }
-              },
-              "semester": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "Semester",
-                  "namespaceId": "public",
-                  "plane": "domain"
                 }
               },
               "updatedAt": {
@@ -1012,6 +1515,21 @@
               }
             },
             "relations": {
+              "academicTerm": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "academicTermId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "AcademicTerm",
+                  "namespace": "public"
+                }
+              },
               "assignments": {
                 "cardinality": "1:N",
                 "on": {
@@ -1101,12 +1619,27 @@
                   "model": "Instructor",
                   "namespace": "public"
                 }
+              },
+              "meetings": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "offeringId"
+                  ]
+                },
+                "to": {
+                  "model": "CourseMeeting",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
               "fields": {
-                "academicYear": {
-                  "column": "academicYear"
+                "academicTermId": {
+                  "column": "academicTermId"
                 },
                 "capacity": {
                   "column": "capacity"
@@ -1123,14 +1656,8 @@
                 "instructorId": {
                   "column": "instructorId"
                 },
-                "room": {
-                  "column": "room"
-                },
                 "section": {
                   "column": "section"
-                },
-                "semester": {
-                  "column": "semester"
                 },
                 "updatedAt": {
                   "column": "updatedAt"
@@ -1303,10 +1830,24 @@
                   "kind": "scalar"
                 }
               },
+              "collegeId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "headInstructorId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -1333,6 +1874,36 @@
               }
             },
             "relations": {
+              "college": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "collegeId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "College",
+                  "namespace": "public"
+                }
+              },
+              "head": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "headInstructorId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Instructor",
+                  "namespace": "public"
+                }
+              },
               "instructors": {
                 "cardinality": "1:N",
                 "on": {
@@ -1369,8 +1940,14 @@
                 "code": {
                   "column": "code"
                 },
+                "collegeId": {
+                  "column": "collegeId"
+                },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "headInstructorId": {
+                  "column": "headInstructorId"
                 },
                 "id": {
                   "column": "id"
@@ -1901,6 +2478,21 @@
                   "namespace": "public"
                 }
               },
+              "deanOfCollege": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "deanId"
+                  ]
+                },
+                "to": {
+                  "model": "College",
+                  "namespace": "public"
+                }
+              },
               "department": {
                 "cardinality": "N:1",
                 "on": {
@@ -1909,6 +2501,21 @@
                   ],
                   "targetFields": [
                     "id"
+                  ]
+                },
+                "to": {
+                  "model": "Department",
+                  "namespace": "public"
+                }
+              },
+              "departmentHeadOf": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "headInstructorId"
                   ]
                 },
                 "to": {
@@ -1943,6 +2550,21 @@
                 },
                 "to": {
                   "model": "CourseOffering",
+                  "namespace": "public"
+                }
+              },
+              "programCoordinatorOf": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "coordinatorInstructorId"
+                  ]
+                },
+                "to": {
+                  "model": "Program",
                   "namespace": "public"
                 }
               },
@@ -2376,6 +2998,13 @@
                   "kind": "scalar"
                 }
               },
+              "coordinatorInstructorId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -2387,6 +3016,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "durationYears": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
@@ -2413,6 +3049,21 @@
               }
             },
             "relations": {
+              "coordinator": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "coordinatorInstructorId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Instructor",
+                  "namespace": "public"
+                }
+              },
               "curriculumCourses": {
                 "cardinality": "1:N",
                 "on": {
@@ -2479,11 +3130,17 @@
                 "code": {
                   "column": "code"
                 },
+                "coordinatorInstructorId": {
+                  "column": "coordinatorInstructorId"
+                },
                 "createdAt": {
                   "column": "createdAt"
                 },
                 "departmentId": {
                   "column": "departmentId"
+                },
+                "durationYears": {
+                  "column": "durationYears"
                 },
                 "id": {
                   "column": "id"
@@ -2501,6 +3158,13 @@
           },
           "Student": {
             "fields": {
+              "admissionAcademicYearId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "createdAt": {
                 "nullable": false,
                 "type": {
@@ -2558,6 +3222,21 @@
               }
             },
             "relations": {
+              "academicStandings": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "studentId"
+                  ]
+                },
+                "to": {
+                  "model": "StudentAcademicStanding",
+                  "namespace": "public"
+                }
+              },
               "accessCredentials": {
                 "cardinality": "1:N",
                 "on": {
@@ -2570,6 +3249,21 @@
                 },
                 "to": {
                   "model": "AccessCredential",
+                  "namespace": "public"
+                }
+              },
+              "admissionAcademicYear": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "admissionAcademicYearId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "AcademicYear",
                   "namespace": "public"
                 }
               },
@@ -2711,6 +3405,9 @@
             },
             "storage": {
               "fields": {
+                "admissionAcademicYearId": {
+                  "column": "admissionAcademicYearId"
+                },
                 "createdAt": {
                   "column": "createdAt"
                 },
@@ -2735,6 +3432,108 @@
               },
               "namespaceId": "public",
               "table": "student"
+            }
+          },
+          "StudentAcademicStanding": {
+            "fields": {
+              "academicTermId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "programYear": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "studentId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "updatedAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "academicTerm": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "academicTermId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "AcademicTerm",
+                  "namespace": "public"
+                }
+              },
+              "student": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "studentId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Student",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "academicTermId": {
+                  "column": "academicTermId"
+                },
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "programYear": {
+                  "column": "programYear"
+                },
+                "studentId": {
+                  "column": "studentId"
+                },
+                "updatedAt": {
+                  "column": "updatedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "studentAcademicStanding"
             }
           },
           "StudentApplication": {
@@ -3439,6 +4238,199 @@
       "public": {
         "entries": {
           "table": {
+            "academicTerm": {
+              "checks": [
+                {
+                  "expression": "\"semester\" IN ('FIRST', 'SECOND', 'SUMMER')",
+                  "name": "academicTerm_semester_check_e3c603ad",
+                  "prefix": "academicTerm_semester_check"
+                }
+              ],
+              "columns": {
+                "academicYearId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "endDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "isCurrent": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "semester": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "Semester",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "startDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "academicYearId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "academicTerm"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "academicYear"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "academicYearId"
+                  ],
+                  "name": "academicTerm_academicYearId_idx_420494e0",
+                  "prefix": "academicTerm_academicYearId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "academicYearId",
+                    "isCurrent"
+                  ],
+                  "name": "academicTerm_academicYearId_isCurrent_idx_e4ea4020",
+                  "prefix": "academicTerm_academicYearId_isCurrent_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "isCurrent"
+                  ],
+                  "name": "academicTerm_isCurrent_idx_ad7fadcb",
+                  "prefix": "academicTerm_isCurrent_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "academicYearId",
+                    "semester"
+                  ]
+                }
+              ]
+            },
+            "academicYear": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "endDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "isCurrent": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "startDate": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [
+                {
+                  "columns": [
+                    "isCurrent"
+                  ],
+                  "name": "academicYear_isCurrent_idx_ad7fadcb",
+                  "prefix": "academicYear_isCurrent_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "name"
+                  ]
+                }
+              ]
+            },
             "accessCredential": {
               "checks": [
                 {
@@ -3781,6 +4773,85 @@
                 }
               ]
             },
+            "college": {
+              "columns": {
+                "code": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "deanId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "deanId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "college"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "instructor"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "name"
+                  ]
+                },
+                {
+                  "columns": [
+                    "code"
+                  ]
+                },
+                {
+                  "columns": [
+                    "deanId"
+                  ]
+                }
+              ]
+            },
             "conversation": {
               "columns": {
                 "createdAt": {
@@ -3900,18 +4971,123 @@
                 }
               ]
             },
-            "courseOffering": {
+            "courseMeeting": {
               "checks": [
                 {
-                  "expression": "\"semester\" IN ('FIRST', 'SECOND', 'SUMMER')",
-                  "name": "courseOffering_semester_check_e3c603ad",
-                  "prefix": "courseOffering_semester_check"
+                  "expression": "\"dayOfWeek\" IN ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY')",
+                  "name": "courseMeeting_dayOfWeek_check_45d2c9c5",
+                  "prefix": "courseMeeting_dayOfWeek_check"
                 }
               ],
               "columns": {
-                "academicYear": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "dayOfWeek": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "DayOfWeek",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "endTime": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "offeringId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "room": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "startTime": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "offeringId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "courseMeeting"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "courseOffering"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "dayOfWeek"
+                  ],
+                  "name": "courseMeeting_dayOfWeek_idx_46a0a64d",
+                  "prefix": "courseMeeting_dayOfWeek_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "offeringId"
+                  ],
+                  "name": "courseMeeting_offeringId_idx_55a2db3c",
+                  "prefix": "courseMeeting_offeringId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "offeringId",
+                    "dayOfWeek",
+                    "startTime",
+                    "endTime"
+                  ]
+                }
+              ]
+            },
+            "courseOffering": {
+              "columns": {
+                "academicTermId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 },
                 "capacity": {
@@ -3943,26 +5119,10 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "room": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true
-                },
                 "section": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
-                },
-                "semester": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Semester",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -3971,6 +5131,22 @@
                 }
               },
               "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "academicTermId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "courseOffering"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "academicTerm"
+                  }
+                },
                 {
                   "source": {
                     "columns": [
@@ -4007,6 +5183,14 @@
               "indexes": [
                 {
                   "columns": [
+                    "academicTermId"
+                  ],
+                  "name": "courseOffering_academicTermId_idx_95c9eee7",
+                  "prefix": "courseOffering_academicTermId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
                     "courseId"
                   ],
                   "name": "courseOffering_courseId_idx_12f72d2a",
@@ -4031,8 +5215,7 @@
                 {
                   "columns": [
                     "courseId",
-                    "academicYear",
-                    "semester",
+                    "academicTermId",
                     "section"
                   ]
                 }
@@ -4196,6 +5379,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "collegeId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -4204,6 +5392,11 @@
                   },
                   "nativeType": "timestamptz",
                   "nullable": false
+                },
+                "headInstructorId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/text@1",
@@ -4221,8 +5414,50 @@
                   "nullable": false
                 }
               },
-              "foreignKeys": [],
-              "indexes": [],
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "collegeId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "department"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "college"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "headInstructorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "department"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "instructor"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "collegeId"
+                  ],
+                  "name": "department_collegeId_idx_3772120b",
+                  "prefix": "department_collegeId_idx",
+                  "unique": false
+                }
+              ],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -4237,6 +5472,11 @@
                 {
                   "columns": [
                     "code"
+                  ]
+                },
+                {
+                  "columns": [
+                    "headInstructorId"
                   ]
                 }
               ]
@@ -5113,6 +6353,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "coordinatorInstructorId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -5125,6 +6370,11 @@
                 "departmentId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
+                  "nullable": false
+                },
+                "durationYears": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
                   "nullable": false
                 },
                 "id": {
@@ -5159,6 +6409,22 @@
                     "namespaceId": "public",
                     "tableName": "department"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "coordinatorInstructorId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "program"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "instructor"
+                  }
                 }
               ],
               "indexes": [
@@ -5181,6 +6447,11 @@
                   "columns": [
                     "code"
                   ]
+                },
+                {
+                  "columns": [
+                    "coordinatorInstructorId"
+                  ]
                 }
               ]
             },
@@ -5193,6 +6464,11 @@
                 }
               ],
               "columns": {
+                "admissionAcademicYearId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "default": {
@@ -5275,9 +6551,33 @@
                     "namespaceId": "public",
                     "tableName": "program"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "admissionAcademicYearId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "student"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "academicYear"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "admissionAcademicYearId"
+                  ],
+                  "name": "student_admissionAcademicYearId_idx_edecf56c",
+                  "prefix": "student_admissionAcademicYearId_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "programId"
@@ -5301,6 +6601,109 @@
                 {
                   "columns": [
                     "studentNumber"
+                  ]
+                }
+              ]
+            },
+            "studentAcademicStanding": {
+              "columns": {
+                "academicTermId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "programYear": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "studentId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "studentId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "studentAcademicStanding"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "student"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "academicTermId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "studentAcademicStanding"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "academicTerm"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "academicTermId"
+                  ],
+                  "name": "studentAcademicStanding_academicTermId_idx_95c9eee7",
+                  "prefix": "studentAcademicStanding_academicTermId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "studentId"
+                  ],
+                  "name": "studentAcademicStanding_studentId_idx_bf255322",
+                  "prefix": "studentAcademicStanding_studentId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "studentId",
+                    "academicTermId"
                   ]
                 }
               ]
@@ -5909,6 +7312,18 @@
                 "GENERAL"
               ]
             },
+            "DayOfWeek": {
+              "kind": "valueSet",
+              "values": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY",
+                "SATURDAY",
+                "SUNDAY"
+              ]
+            },
             "EnrollmentStatus": {
               "kind": "valueSet",
               "values": [
@@ -5976,10 +7391,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "3325f753be5731500637a021f9e292e4f75b6b9e796e18d883b129705a926217"
+    "storageHash": "a735a2a9856e6ea21dea04fd95b1c3f84e46fc849a34dcd445ca02bc50e70fac"
   },
   "execution": {
-    "executionHash": "e274881078635931ba3a31153ccef34b583fc678b9e96b33f4e62a09f387f93f",
+    "executionHash": "76be95c1937c10e2f5dd65a2ba4ceb01b6643e7591312648e6a2ab4b9a992cbe",
     "mutations": {
       "defaults": [
         {
@@ -5990,6 +7405,58 @@
           "ref": {
             "column": "id",
             "namespace": "public",
+            "table": "academicTerm"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "academicTerm"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "academicYear"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "academicYear"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
             "table": "accessCredential"
           }
         },
@@ -6068,6 +7535,32 @@
           "ref": {
             "column": "id",
             "namespace": "public",
+            "table": "college"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "college"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
             "table": "conversation"
           }
         },
@@ -6110,6 +7603,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "course"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "courseMeeting"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "courseMeeting"
           }
         },
         {
@@ -6429,6 +7948,32 @@
             "column": "updatedAt",
             "namespace": "public",
             "table": "student"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "studentAcademicStanding"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "onUpdate": {
+            "id": "timestampNow",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "updatedAt",
+            "namespace": "public",
+            "table": "studentAcademicStanding"
           }
         },
         {

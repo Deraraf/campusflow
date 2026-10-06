@@ -33,9 +33,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'3325f753be5731500637a021f9e292e4f75b6b9e796e18d883b129705a926217'>;
+  StorageHashBase<'a735a2a9856e6ea21dea04fd95b1c3f84e46fc849a34dcd445ca02bc50e70fac'>;
 export type ExecutionHash =
-  ExecutionHashBase<'e274881078635931ba3a31153ccef34b583fc678b9e96b33f4e62a09f387f93f'>;
+  ExecutionHashBase<'76be95c1937c10e2f5dd65a2ba4ceb01b6643e7591312648e6a2ab4b9a992cbe'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -241,6 +241,25 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
+    readonly AcademicTerm: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly academicYearId: CodecTypes['pg/text@1']['output'];
+      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly AcademicYear: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly AccessCredential: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly studentId: CodecTypes['pg/text@1']['output'];
@@ -271,6 +290,14 @@ export type FieldOutputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
+    readonly College: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly code: CodecTypes['pg/text@1']['output'];
+      readonly deanId: CodecTypes['pg/text@1']['output'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly Conversation: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
@@ -286,14 +313,23 @@ export type FieldOutputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
+    readonly CourseMeeting: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly offeringId: CodecTypes['pg/text@1']['output'];
+      readonly dayOfWeek:
+        'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+      readonly startTime: CodecTypes['pg/text@1']['output'];
+      readonly endTime: CodecTypes['pg/text@1']['output'];
+      readonly room: CodecTypes['pg/text@1']['output'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly CourseOffering: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly courseId: CodecTypes['pg/text@1']['output'];
       readonly instructorId: CodecTypes['pg/text@1']['output'];
-      readonly academicYear: CodecTypes['pg/int4@1']['output'];
-      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
+      readonly academicTermId: CodecTypes['pg/text@1']['output'];
       readonly section: CodecTypes['pg/text@1']['output'];
-      readonly room: CodecTypes['pg/text@1']['output'] | null;
       readonly capacity: CodecTypes['pg/int4@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -314,6 +350,8 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly code: CodecTypes['pg/text@1']['output'];
+      readonly collegeId: CodecTypes['pg/text@1']['output'];
+      readonly headInstructorId: CodecTypes['pg/text@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -400,6 +438,8 @@ export type FieldOutputTypes = {
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly code: CodecTypes['pg/text@1']['output'];
       readonly departmentId: CodecTypes['pg/text@1']['output'];
+      readonly durationYears: CodecTypes['pg/int4@1']['output'];
+      readonly coordinatorInstructorId: CodecTypes['pg/text@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -408,7 +448,16 @@ export type FieldOutputTypes = {
       readonly userId: CodecTypes['pg/text@1']['output'];
       readonly studentNumber: CodecTypes['pg/text@1']['output'];
       readonly programId: CodecTypes['pg/text@1']['output'];
+      readonly admissionAcademicYearId: CodecTypes['pg/text@1']['output'];
       readonly status: 'ACTIVE' | 'SUSPENDED' | 'GRADUATED' | 'WITHDRAWN';
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly StudentAcademicStanding: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly studentId: CodecTypes['pg/text@1']['output'];
+      readonly academicTermId: CodecTypes['pg/text@1']['output'];
+      readonly programYear: CodecTypes['pg/int4@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -466,6 +515,25 @@ export type FieldOutputTypes = {
 };
 export type FieldInputTypes = {
   readonly public: {
+    readonly AcademicTerm: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly academicYearId: CodecTypes['pg/text@1']['input'];
+      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly AcademicYear: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly AccessCredential: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly studentId: CodecTypes['pg/text@1']['input'];
@@ -496,6 +564,14 @@ export type FieldInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
+    readonly College: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly code: CodecTypes['pg/text@1']['input'];
+      readonly deanId: CodecTypes['pg/text@1']['input'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly Conversation: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
@@ -511,14 +587,23 @@ export type FieldInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
+    readonly CourseMeeting: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly offeringId: CodecTypes['pg/text@1']['input'];
+      readonly dayOfWeek:
+        'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+      readonly startTime: CodecTypes['pg/text@1']['input'];
+      readonly endTime: CodecTypes['pg/text@1']['input'];
+      readonly room: CodecTypes['pg/text@1']['input'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly CourseOffering: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly courseId: CodecTypes['pg/text@1']['input'];
       readonly instructorId: CodecTypes['pg/text@1']['input'];
-      readonly academicYear: CodecTypes['pg/int4@1']['input'];
-      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
+      readonly academicTermId: CodecTypes['pg/text@1']['input'];
       readonly section: CodecTypes['pg/text@1']['input'];
-      readonly room: CodecTypes['pg/text@1']['input'] | null;
       readonly capacity: CodecTypes['pg/int4@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -539,6 +624,8 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly code: CodecTypes['pg/text@1']['input'];
+      readonly collegeId: CodecTypes['pg/text@1']['input'];
+      readonly headInstructorId: CodecTypes['pg/text@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -625,6 +712,8 @@ export type FieldInputTypes = {
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly code: CodecTypes['pg/text@1']['input'];
       readonly departmentId: CodecTypes['pg/text@1']['input'];
+      readonly durationYears: CodecTypes['pg/int4@1']['input'];
+      readonly coordinatorInstructorId: CodecTypes['pg/text@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -633,7 +722,16 @@ export type FieldInputTypes = {
       readonly userId: CodecTypes['pg/text@1']['input'];
       readonly studentNumber: CodecTypes['pg/text@1']['input'];
       readonly programId: CodecTypes['pg/text@1']['input'];
+      readonly admissionAcademicYearId: CodecTypes['pg/text@1']['input'];
       readonly status: 'ACTIVE' | 'SUSPENDED' | 'GRADUATED' | 'WITHDRAWN';
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly StudentAcademicStanding: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly studentId: CodecTypes['pg/text@1']['input'];
+      readonly academicTermId: CodecTypes['pg/text@1']['input'];
+      readonly programYear: CodecTypes['pg/int4@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -691,6 +789,25 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
+    readonly academicTerm: {
+      readonly academicYearId: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['output'];
+      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly academicYear: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly accessCredential: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly credentialNumber: CodecTypes['pg/text@1']['output'];
@@ -721,6 +838,14 @@ export type StorageColumnTypes = {
       readonly studentId: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
+    readonly college: {
+      readonly code: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deanId: CodecTypes['pg/text@1']['output'] | null;
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly conversation: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
@@ -736,16 +861,25 @@ export type StorageColumnTypes = {
       readonly title: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
+    readonly courseMeeting: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly dayOfWeek:
+        'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+      readonly endTime: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly offeringId: CodecTypes['pg/text@1']['output'];
+      readonly room: CodecTypes['pg/text@1']['output'] | null;
+      readonly startTime: CodecTypes['pg/text@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly courseOffering: {
-      readonly academicYear: CodecTypes['pg/int4@1']['output'];
+      readonly academicTermId: CodecTypes['pg/text@1']['output'];
       readonly capacity: CodecTypes['pg/int4@1']['output'] | null;
       readonly courseId: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly instructorId: CodecTypes['pg/text@1']['output'];
-      readonly room: CodecTypes['pg/text@1']['output'] | null;
       readonly section: CodecTypes['pg/text@1']['output'];
-      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
     readonly curriculumCourse: {
@@ -762,7 +896,9 @@ export type StorageColumnTypes = {
     };
     readonly department: {
       readonly code: CodecTypes['pg/text@1']['output'];
+      readonly collegeId: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly headInstructorId: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -847,13 +983,16 @@ export type StorageColumnTypes = {
     };
     readonly program: {
       readonly code: CodecTypes['pg/text@1']['output'];
+      readonly coordinatorInstructorId: CodecTypes['pg/text@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly departmentId: CodecTypes['pg/text@1']['output'];
+      readonly durationYears: CodecTypes['pg/int4@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
     readonly student: {
+      readonly admissionAcademicYearId: CodecTypes['pg/text@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly programId: CodecTypes['pg/text@1']['output'];
@@ -861,6 +1000,14 @@ export type StorageColumnTypes = {
       readonly studentNumber: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly userId: CodecTypes['pg/text@1']['output'];
+    };
+    readonly studentAcademicStanding: {
+      readonly academicTermId: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly programYear: CodecTypes['pg/int4@1']['output'];
+      readonly studentId: CodecTypes['pg/text@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
     readonly studentApplication: {
       readonly applicationNumber: CodecTypes['pg/text@1']['output'];
@@ -916,6 +1063,25 @@ export type StorageColumnTypes = {
 };
 export type StorageColumnInputTypes = {
   readonly public: {
+    readonly academicTerm: {
+      readonly academicYearId: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['input'];
+      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly academicYear: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly endDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly isCurrent: CodecTypes['pg/bool@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly startDate: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly accessCredential: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly credentialNumber: CodecTypes['pg/text@1']['input'];
@@ -946,6 +1112,14 @@ export type StorageColumnInputTypes = {
       readonly studentId: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
+    readonly college: {
+      readonly code: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deanId: CodecTypes['pg/text@1']['input'] | null;
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly conversation: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
@@ -961,16 +1135,25 @@ export type StorageColumnInputTypes = {
       readonly title: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
+    readonly courseMeeting: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly dayOfWeek:
+        'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+      readonly endTime: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly offeringId: CodecTypes['pg/text@1']['input'];
+      readonly room: CodecTypes['pg/text@1']['input'] | null;
+      readonly startTime: CodecTypes['pg/text@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly courseOffering: {
-      readonly academicYear: CodecTypes['pg/int4@1']['input'];
+      readonly academicTermId: CodecTypes['pg/text@1']['input'];
       readonly capacity: CodecTypes['pg/int4@1']['input'] | null;
       readonly courseId: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly instructorId: CodecTypes['pg/text@1']['input'];
-      readonly room: CodecTypes['pg/text@1']['input'] | null;
       readonly section: CodecTypes['pg/text@1']['input'];
-      readonly semester: 'FIRST' | 'SECOND' | 'SUMMER';
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly curriculumCourse: {
@@ -987,7 +1170,9 @@ export type StorageColumnInputTypes = {
     };
     readonly department: {
       readonly code: CodecTypes['pg/text@1']['input'];
+      readonly collegeId: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly headInstructorId: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -1072,13 +1257,16 @@ export type StorageColumnInputTypes = {
     };
     readonly program: {
       readonly code: CodecTypes['pg/text@1']['input'];
+      readonly coordinatorInstructorId: CodecTypes['pg/text@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly departmentId: CodecTypes['pg/text@1']['input'];
+      readonly durationYears: CodecTypes['pg/int4@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly student: {
+      readonly admissionAcademicYearId: CodecTypes['pg/text@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly programId: CodecTypes['pg/text@1']['input'];
@@ -1086,6 +1274,14 @@ export type StorageColumnInputTypes = {
       readonly studentNumber: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly userId: CodecTypes['pg/text@1']['input'];
+    };
+    readonly studentAcademicStanding: {
+      readonly academicTermId: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly programYear: CodecTypes['pg/int4@1']['input'];
+      readonly studentId: CodecTypes['pg/text@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
     readonly studentApplication: {
       readonly applicationNumber: CodecTypes['pg/text@1']['input'];
@@ -1157,6 +1353,146 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly academicTerm: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly academicYearId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly semester: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly startDate: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+                readonly endDate: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+                readonly isCurrent: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['academicYearId', 'semester'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'academicTerm_isCurrent_idx_ad7fadcb';
+                  readonly prefix: 'academicTerm_isCurrent_idx';
+                  readonly columns: readonly ['isCurrent'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'academicTerm_academicYearId_isCurrent_idx_e4ea4020';
+                  readonly prefix: 'academicTerm_academicYearId_isCurrent_idx';
+                  readonly columns: readonly ['academicYearId', 'isCurrent'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'academicTerm_academicYearId_idx_420494e0';
+                  readonly prefix: 'academicTerm_academicYearId_idx';
+                  readonly columns: readonly ['academicYearId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'academicTerm';
+                    readonly columns: readonly ['academicYearId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'academicYear';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly academicYear: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly startDate: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+                readonly endDate: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+                readonly isCurrent: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['name'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'academicYear_isCurrent_idx_ad7fadcb';
+                  readonly prefix: 'academicYear_isCurrent_idx';
+                  readonly columns: readonly ['isCurrent'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [];
+            };
             readonly accessCredential: {
               columns: {
                 readonly id: {
@@ -1407,6 +1743,62 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly college: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly code: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly deanId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [
+                { readonly columns: readonly ['name'] },
+                { readonly columns: readonly ['code'] },
+                { readonly columns: readonly ['deanId'] },
+              ];
+              indexes: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'college';
+                    readonly columns: readonly ['deanId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'instructor';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly conversation: {
               columns: {
                 readonly id: {
@@ -1500,6 +1892,83 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
+            readonly courseMeeting: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly offeringId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly dayOfWeek: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly startTime: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly endTime: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly room: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [
+                { readonly columns: readonly ['offeringId', 'dayOfWeek', 'startTime', 'endTime'] },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'courseMeeting_offeringId_idx_55a2db3c';
+                  readonly prefix: 'courseMeeting_offeringId_idx';
+                  readonly columns: readonly ['offeringId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'courseMeeting_dayOfWeek_idx_46a0a64d';
+                  readonly prefix: 'courseMeeting_dayOfWeek_idx';
+                  readonly columns: readonly ['dayOfWeek'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'courseMeeting';
+                    readonly columns: readonly ['offeringId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'courseOffering';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly courseOffering: {
               columns: {
                 readonly id: {
@@ -1517,12 +1986,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly academicYear: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                };
-                readonly semester: {
+                readonly academicTermId: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -1531,11 +1995,6 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                };
-                readonly room: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
                 };
                 readonly capacity: {
                   readonly nativeType: 'int4';
@@ -1556,13 +2015,13 @@ type ContractBase = Omit<
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [
-                { readonly columns: readonly ['courseId', 'academicYear', 'semester', 'section'] },
+                { readonly columns: readonly ['courseId', 'academicTermId', 'section'] },
               ];
               indexes: readonly [
                 {
-                  readonly name: 'courseOffering_courseId_idx_12f72d2a';
-                  readonly prefix: 'courseOffering_courseId_idx';
-                  readonly columns: readonly ['courseId'];
+                  readonly name: 'courseOffering_academicTermId_idx_95c9eee7';
+                  readonly prefix: 'courseOffering_academicTermId_idx';
+                  readonly columns: readonly ['academicTermId'];
                   readonly unique: false;
                 },
                 {
@@ -1571,8 +2030,26 @@ type ContractBase = Omit<
                   readonly columns: readonly ['instructorId'];
                   readonly unique: false;
                 },
+                {
+                  readonly name: 'courseOffering_courseId_idx_12f72d2a';
+                  readonly prefix: 'courseOffering_courseId_idx';
+                  readonly columns: readonly ['courseId'];
+                  readonly unique: false;
+                },
               ];
               foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'courseOffering';
+                    readonly columns: readonly ['academicTermId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'academicTerm';
+                    readonly columns: readonly ['id'];
+                  };
+                },
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
@@ -1717,6 +2194,16 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly collegeId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly headInstructorId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
@@ -1733,9 +2220,42 @@ type ContractBase = Omit<
               uniques: readonly [
                 { readonly columns: readonly ['name'] },
                 { readonly columns: readonly ['code'] },
+                { readonly columns: readonly ['headInstructorId'] },
               ];
-              indexes: readonly [];
-              foreignKeys: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'department_collegeId_idx_3772120b';
+                  readonly prefix: 'department_collegeId_idx';
+                  readonly columns: readonly ['collegeId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'department';
+                    readonly columns: readonly ['collegeId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'college';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'department';
+                    readonly columns: readonly ['headInstructorId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'instructor';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly emailVerificationToken: {
               columns: {
@@ -2399,6 +2919,16 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly durationYears: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly coordinatorInstructorId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
@@ -2412,7 +2942,10 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['code'] }];
+              uniques: readonly [
+                { readonly columns: readonly ['code'] },
+                { readonly columns: readonly ['coordinatorInstructorId'] },
+              ];
               indexes: readonly [
                 {
                   readonly name: 'program_departmentId_idx_8e261ed8';
@@ -2431,6 +2964,18 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'department';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'program';
+                    readonly columns: readonly ['coordinatorInstructorId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'instructor';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -2454,6 +2999,11 @@ type ContractBase = Omit<
                   readonly nullable: false;
                 };
                 readonly programId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly admissionAcademicYearId: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -2491,6 +3041,12 @@ type ContractBase = Omit<
                   readonly columns: readonly ['programId'];
                   readonly unique: false;
                 },
+                {
+                  readonly name: 'student_admissionAcademicYearId_idx_edecf56c';
+                  readonly prefix: 'student_admissionAcademicYearId_idx';
+                  readonly columns: readonly ['admissionAcademicYearId'];
+                  readonly unique: false;
+                },
               ];
               foreignKeys: readonly [
                 {
@@ -2514,6 +3070,95 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'program';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'student';
+                    readonly columns: readonly ['admissionAcademicYearId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'academicYear';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly studentAcademicStanding: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly studentId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly academicTermId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly programYear: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['studentId', 'academicTermId'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'studentAcademicStanding_studentId_idx_bf255322';
+                  readonly prefix: 'studentAcademicStanding_studentId_idx';
+                  readonly columns: readonly ['studentId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'studentAcademicStanding_academicTermId_idx_95c9eee7';
+                  readonly prefix: 'studentAcademicStanding_academicTermId_idx';
+                  readonly columns: readonly ['academicTermId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'studentAcademicStanding';
+                    readonly columns: readonly ['studentId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'student';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'studentAcademicStanding';
+                    readonly columns: readonly ['academicTermId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'academicTerm';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -2938,6 +3583,18 @@ type ContractBase = Omit<
               readonly kind: 'valueSet';
               readonly values: readonly ['CORE', 'ELECTIVE', 'GENERAL'];
             };
+            readonly DayOfWeek: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'MONDAY',
+                'TUESDAY',
+                'WEDNESDAY',
+                'THURSDAY',
+                'FRIDAY',
+                'SATURDAY',
+                'SUNDAY',
+              ];
+            };
             readonly EnrollmentStatus: {
               readonly kind: 'valueSet';
               readonly values: readonly ['ACTIVE', 'DROPPED', 'COMPLETED', 'FAILED'];
@@ -2987,6 +3644,10 @@ type ContractBase = Omit<
       readonly model: 'PasswordResetToken';
     };
     readonly student: { readonly namespace: 'public' & NamespaceId; readonly model: 'Student' };
+    readonly studentAcademicStanding: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'StudentAcademicStanding';
+    };
     readonly studentApplication: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'StudentApplication';
@@ -3000,6 +3661,7 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'AccessCredential';
     };
+    readonly college: { readonly namespace: 'public' & NamespaceId; readonly model: 'College' };
     readonly department: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Department';
@@ -3007,6 +3669,14 @@ type ContractBase = Omit<
     readonly instructor: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Instructor';
+    };
+    readonly academicYear: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AcademicYear';
+    };
+    readonly academicTerm: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'AcademicTerm';
     };
     readonly program: { readonly namespace: 'public' & NamespaceId; readonly model: 'Program' };
     readonly course: { readonly namespace: 'public' & NamespaceId; readonly model: 'Course' };
@@ -3017,6 +3687,10 @@ type ContractBase = Omit<
     readonly courseOffering: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CourseOffering';
+    };
+    readonly courseMeeting: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'CourseMeeting';
     };
     readonly enrollment: {
       readonly namespace: 'public' & NamespaceId;
@@ -3050,6 +3724,184 @@ type ContractBase = Omit<
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly AcademicTerm: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly academicYearId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly semester: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly startDate: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly endDate: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly isCurrent: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly academicYear: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AcademicYear';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['academicYearId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly courseOfferings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CourseOffering';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['academicTermId'];
+                };
+              };
+              readonly studentStandings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'StudentAcademicStanding';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['academicTermId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'academicTerm';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly academicYearId: { readonly column: 'academicYearId' };
+                readonly semester: { readonly column: 'semester' };
+                readonly startDate: { readonly column: 'startDate' };
+                readonly endDate: { readonly column: 'endDate' };
+                readonly isCurrent: { readonly column: 'isCurrent' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
+          readonly AcademicYear: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly startDate: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly endDate: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly isCurrent: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly studentsAdmitted: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Student';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['admissionAcademicYearId'];
+                };
+              };
+              readonly terms: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AcademicTerm';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['academicYearId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'academicYear';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly name: { readonly column: 'name' };
+                readonly startDate: { readonly column: 'startDate' };
+                readonly endDate: { readonly column: 'endDate' };
+                readonly isCurrent: { readonly column: 'isCurrent' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
           readonly AccessCredential: {
             readonly fields: {
               readonly id: {
@@ -3302,6 +4154,76 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly College: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly code: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly deanId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly dean: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Instructor';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['deanId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly departments: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Department';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['collegeId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'college';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly name: { readonly column: 'name' };
+                readonly code: { readonly column: 'code' };
+                readonly deanId: { readonly column: 'deanId' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
           readonly Conversation: {
             readonly fields: {
               readonly id: {
@@ -3434,6 +4356,75 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly CourseMeeting: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly offeringId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly dayOfWeek: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly startTime: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly endTime: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly room: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly offering: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CourseOffering';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['offeringId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'courseMeeting';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly offeringId: { readonly column: 'offeringId' };
+                readonly dayOfWeek: { readonly column: 'dayOfWeek' };
+                readonly startTime: { readonly column: 'startTime' };
+                readonly endTime: { readonly column: 'endTime' };
+                readonly room: { readonly column: 'room' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
           readonly CourseOffering: {
             readonly fields: {
               readonly id: {
@@ -3448,20 +4439,12 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly academicYear: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly semester: {
+              readonly academicTermId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly section: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly room: {
-                readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly capacity: {
@@ -3484,6 +4467,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly academicTerm: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AcademicTerm';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['academicTermId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly assignments: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -3547,6 +4541,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly meetings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CourseMeeting';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['offeringId'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'courseOffering';
@@ -3555,10 +4560,8 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly courseId: { readonly column: 'courseId' };
                 readonly instructorId: { readonly column: 'instructorId' };
-                readonly academicYear: { readonly column: 'academicYear' };
-                readonly semester: { readonly column: 'semester' };
+                readonly academicTermId: { readonly column: 'academicTermId' };
                 readonly section: { readonly column: 'section' };
-                readonly room: { readonly column: 'room' };
                 readonly capacity: { readonly column: 'capacity' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
@@ -3669,6 +4672,14 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly collegeId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly headInstructorId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: {
@@ -3685,6 +4696,28 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly college: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'College';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['collegeId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly head: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Instructor';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['headInstructorId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly instructors: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -3715,6 +4748,8 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly code: { readonly column: 'code' };
+                readonly collegeId: { readonly column: 'collegeId' };
+                readonly headInstructorId: { readonly column: 'headInstructorId' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
@@ -4071,6 +5106,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['instructorId'];
                 };
               };
+              readonly deanOfCollege: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'College';
+                };
+                readonly cardinality: '1:1';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['deanId'];
+                };
+              };
               readonly department: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -4080,6 +5126,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['departmentId'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly departmentHeadOf: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Department';
+                };
+                readonly cardinality: '1:1';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['headInstructorId'];
                 };
               };
               readonly exams: {
@@ -4099,6 +5156,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['instructorId'];
+                };
+              };
+              readonly programCoordinatorOf: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Program';
+                };
+                readonly cardinality: '1:1';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['coordinatorInstructorId'];
                 };
               };
               readonly user: {
@@ -4387,6 +5455,14 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly durationYears: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly coordinatorInstructorId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly createdAt: {
                 readonly nullable: false;
                 readonly type: {
@@ -4403,6 +5479,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly coordinator: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Instructor';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['coordinatorInstructorId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly curriculumCourses: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -4456,6 +5543,8 @@ type ContractBase = Omit<
                 readonly name: { readonly column: 'name' };
                 readonly code: { readonly column: 'code' };
                 readonly departmentId: { readonly column: 'departmentId' };
+                readonly durationYears: { readonly column: 'durationYears' };
+                readonly coordinatorInstructorId: { readonly column: 'coordinatorInstructorId' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
@@ -4479,6 +5568,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly admissionAcademicYearId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly status: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -4499,6 +5592,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly academicStandings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'StudentAcademicStanding';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['studentId'];
+                };
+              };
               readonly accessCredentials: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -4508,6 +5612,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['studentId'];
+                };
+              };
+              readonly admissionAcademicYear: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AcademicYear';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['admissionAcademicYearId'];
+                  readonly targetFields: readonly ['id'];
                 };
               };
               readonly application: {
@@ -4615,7 +5730,78 @@ type ContractBase = Omit<
                 readonly userId: { readonly column: 'userId' };
                 readonly studentNumber: { readonly column: 'studentNumber' };
                 readonly programId: { readonly column: 'programId' };
+                readonly admissionAcademicYearId: { readonly column: 'admissionAcademicYearId' };
                 readonly status: { readonly column: 'status' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+              };
+            };
+          };
+          readonly StudentAcademicStanding: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly studentId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly academicTermId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly programYear: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly academicTerm: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'AcademicTerm';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['academicTermId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly student: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Student';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['studentId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'studentAcademicStanding';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly studentId: { readonly column: 'studentId' };
+                readonly academicTermId: { readonly column: 'academicTermId' };
+                readonly programYear: { readonly column: 'programYear' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
@@ -5082,6 +6268,18 @@ type ContractBase = Omit<
               { readonly name: 'SUMMER'; readonly value: 'SUMMER' },
             ];
           };
+          readonly DayOfWeek: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'MONDAY'; readonly value: 'MONDAY' },
+              { readonly name: 'TUESDAY'; readonly value: 'TUESDAY' },
+              { readonly name: 'WEDNESDAY'; readonly value: 'WEDNESDAY' },
+              { readonly name: 'THURSDAY'; readonly value: 'THURSDAY' },
+              { readonly name: 'FRIDAY'; readonly value: 'FRIDAY' },
+              { readonly name: 'SATURDAY'; readonly value: 'SATURDAY' },
+              { readonly name: 'SUNDAY'; readonly value: 'SUNDAY' },
+            ];
+          };
           readonly CourseType: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
@@ -5209,6 +6407,40 @@ type ContractBase = Omit<
         {
           readonly ref: {
             readonly namespace: 'public';
+            readonly table: 'academicTerm';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'academicTerm';
+            readonly column: 'updatedAt';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'academicYear';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'academicYear';
+            readonly column: 'updatedAt';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
             readonly table: 'accessCredential';
             readonly column: 'id';
           };
@@ -5260,6 +6492,23 @@ type ContractBase = Omit<
         {
           readonly ref: {
             readonly namespace: 'public';
+            readonly table: 'college';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'college';
+            readonly column: 'updatedAt';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
             readonly table: 'conversation';
             readonly column: 'id';
           };
@@ -5286,6 +6535,23 @@ type ContractBase = Omit<
           readonly ref: {
             readonly namespace: 'public';
             readonly table: 'course';
+            readonly column: 'updatedAt';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'courseMeeting';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'courseMeeting';
             readonly column: 'updatedAt';
           };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
@@ -5497,6 +6763,23 @@ type ContractBase = Omit<
           readonly ref: {
             readonly namespace: 'public';
             readonly table: 'student';
+            readonly column: 'updatedAt';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'studentAcademicStanding';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'studentAcademicStanding';
             readonly column: 'updatedAt';
           };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
