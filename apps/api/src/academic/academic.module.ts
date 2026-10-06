@@ -6,6 +6,9 @@ import { DepartmentsModule } from './departments/departments.module.js';
 import { ProgramsModule } from './programs/programs.module.js';
 import { CoursesModule } from './courses/courses.module.js';
 import { CourseOfferingsModule } from './course-offerings/course-offerings.module.js';
+import { StudentApplicationsModule } from './student-applications/student-applications.module.js';
+import { StudentsModule } from './students/students.module.js';
+import { StudentAcademicStandingsModule } from './student-academic-standings/student-academic-standings.module.js';
 
 @Module({
   imports: [
@@ -16,6 +19,9 @@ import { CourseOfferingsModule } from './course-offerings/course-offerings.modul
     ProgramsModule,
     CoursesModule,
     CourseOfferingsModule,
+    StudentApplicationsModule,
+    StudentsModule,
+    StudentAcademicStandingsModule,
   ],
 })
 export class AcademicModule {}
