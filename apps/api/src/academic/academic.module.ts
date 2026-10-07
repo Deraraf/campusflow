@@ -12,6 +12,7 @@ import { StudentAcademicStandingsModule } from './student-academic-standings/stu
 import { EnrollmentsModule } from './enrollments/enrollments.module.js';
 import { AssignmentsModule } from './assignments/assignments.module.js';
 import { SubmissionsModule } from './submissions/submissions.module.js';
+import { AttendanceModule } from './attendance/attendance.module.js';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SubmissionsModule } from './submissions/submissions.module.js';
     EnrollmentsModule,
     AssignmentsModule,
     SubmissionsModule,
+    AttendanceModule,
   ],
 })
 export class AcademicModule {}
