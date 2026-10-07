@@ -13,6 +13,8 @@ import { EnrollmentsModule } from './enrollments/enrollments.module.js';
 import { AssignmentsModule } from './assignments/assignments.module.js';
 import { SubmissionsModule } from './submissions/submissions.module.js';
 import { AttendanceModule } from './attendance/attendance.module.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
+import { ConversationsModule } from './conversations/conversations.module.js';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { AttendanceModule } from './attendance/attendance.module.js';
     AssignmentsModule,
     SubmissionsModule,
     AttendanceModule,
+    NotificationsModule,
+    ConversationsModule,
   ],
 })
 export class AcademicModule {}
