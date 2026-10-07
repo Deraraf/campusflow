@@ -15,7 +15,7 @@ import { RolesGuard } from '../../auth/guards/roles.guard.js';
 import type { UserResponse } from '../../users/entities/user.entity.js';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto.js';
 import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto.js';
-import { EnrollmentsService } from './enrollments.service.js';
+import { EnrollmentsService } from './enrollments.service';
 
 @Controller('enrollments')
 @UseGuards(JwtAuthGuard, RolesGuard)
