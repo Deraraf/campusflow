@@ -8,6 +8,7 @@ import { CoursesModule } from './courses/courses.module.js';
 import { CourseOfferingsModule } from './course-offerings/course-offerings.module.js';
 import { StudentApplicationsModule } from './student-applications/student-applications.module.js';
 import { StudentsModule } from './students/students.module.js';
+import { InstructorsModule } from './instructors/instructors.module.js';
 import { StudentAcademicStandingsModule } from './student-academic-standings/student-academic-standings.module.js';
 import { EnrollmentsModule } from './enrollments/enrollments.module.js';
 import { AssignmentsModule } from './assignments/assignments.module.js';
@@ -27,6 +28,7 @@ import { ConversationsModule } from './conversations/conversations.module.js';
     CourseOfferingsModule,
     StudentApplicationsModule,
     StudentsModule,
+    InstructorsModule,
     StudentAcademicStandingsModule,
     EnrollmentsModule,
     AssignmentsModule,

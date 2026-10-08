@@ -11,6 +11,7 @@ import {
 import { Roles } from '../../auth/decorators/roles.decorator.js';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from '../../auth/guards/roles.guard.js';
+import { InstructorsService } from '../instructors/instructors.service.js';
 import { CreateDepartmentDto } from './dto/create-department.dto.js';
 import { UpdateDepartmentDto } from './dto/update-department.dto.js';
 import { DepartmentsService } from './departments.service.js';
@@ -18,7 +19,10 @@ import { DepartmentsService } from './departments.service.js';
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DepartmentsController {
-  constructor(private readonly departmentsService: DepartmentsService) {}
+  constructor(
+    private readonly departmentsService: DepartmentsService,
+    private readonly instructorsService: InstructorsService,
+  ) {}
 
   @Get('departments')
   @Roles('ADMIN')
@@ -54,5 +58,11 @@ export class DepartmentsController {
   @Roles('ADMIN')
   listByCollege(@Param('collegeId') collegeId: string) {
     return this.departmentsService.listByCollege(collegeId);
+  }
+
+  @Get('departments/:departmentId/instructors')
+  @Roles('ADMIN')
+  listInstructorsByDepartment(@Param('departmentId') departmentId: string) {
+    return this.instructorsService.listByDepartment(departmentId);
   }
 }
