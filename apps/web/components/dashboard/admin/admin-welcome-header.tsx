@@ -7,9 +7,10 @@ export default function AdminWelcomeHeader() {
     <header className={styles.welcomeHeader}>
       <div>
         <p className={styles.eyebrow}>UNIVERSITY ADMINISTRATION</p>
-        <h1>Institutional overview</h1>
+        <h1>Admin dashboard</h1>
         <p className={styles.welcomeCopy}>
-          Review university records, administration, and system activity.
+          Welcome to CampusFlow administration. Review university accounts and
+          current-term course offerings.
         </p>
       </div>
       <Link className={styles.textLink} href="/admin/users">
