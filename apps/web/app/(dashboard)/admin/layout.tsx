@@ -12,6 +12,7 @@ const adminNavigation: readonly DashboardNavigationGroup[] = [
       { label: "Dashboard", href: "/admin" },
       { label: "Users", href: "/admin/users" },
       { label: "Applications", href: "/admin/applications" },
+      { label: "Academic calendar", href: "/admin/academic-calendar" },
       { label: "Students", href: "/admin/students" },
       { label: "Instructors", href: "/admin/instructors" },
       { label: "Departments", href: "/admin/departments" },
