@@ -11,6 +11,7 @@ const adminNavigation: readonly DashboardNavigationGroup[] = [
     items: [
       { label: "Dashboard", href: "/admin" },
       { label: "Users", href: "/admin/users" },
+      { label: "Applications", href: "/admin/applications" },
       { label: "Students", href: "/admin/students" },
       { label: "Instructors", href: "/admin/instructors" },
       { label: "Departments", href: "/admin/departments" },
