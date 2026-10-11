@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 
 const apiUrl = process.env.NEXT_API_URL ?? "http://localhost:4000";
 
-export async function forwardAdminRead(request: Request, path: string) {
+export async function forwardAdminRead(
+  request: Request,
+  path: string,
+  unavailableMessage = "Enrollment service is unavailable. Please try again.",
+) {
   try {
     const response = await fetch(`${apiUrl}${path}`, {
       headers: { cookie: request.headers.get("cookie") ?? "" },
@@ -19,7 +23,7 @@ export async function forwardAdminRead(request: Request, path: string) {
     });
   } catch {
     return NextResponse.json(
-      { message: "Enrollment service is unavailable. Please try again." },
+      { message: unavailableMessage },
       { status: 502 },
     );
   }
@@ -78,5 +82,43 @@ export async function forwardAdminMutation(
       { message: unavailableMessage },
       { status: 502 },
     );
+  }
+}
+
+export async function forwardAdminDelete(
+  request: Request,
+  path: string,
+  unavailableMessage: string,
+) {
+  if (!isSameOriginRequest(request)) {
+    return NextResponse.json(
+      { message: "A same-origin request is required." },
+      { status: 403 },
+    );
+  }
+
+  try {
+    const origin = request.headers.get("origin");
+    const referer = request.headers.get("referer");
+    const response = await fetch(`${apiUrl}${path}`, {
+      method: "DELETE",
+      headers: {
+        cookie: request.headers.get("cookie") ?? "",
+        ...(origin ? { origin } : {}),
+        ...(!origin && referer ? { referer } : {}),
+      },
+      cache: "no-store",
+    });
+    const responseBody = await response.text();
+    return new NextResponse(responseBody || null, {
+      status: response.status,
+      headers: {
+        "Content-Type":
+          response.headers.get("content-type") ?? "application/json",
+        "Cache-Control": "no-store",
+      },
+    });
+  } catch {
+    return NextResponse.json({ message: unavailableMessage }, { status: 502 });
   }
 }
