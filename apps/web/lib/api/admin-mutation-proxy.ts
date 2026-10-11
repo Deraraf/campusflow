@@ -41,6 +41,7 @@ export async function forwardAdminMutation(
   path: string,
   method: "POST" | "PATCH",
   body: string,
+  unavailableMessage = "Enrollment service is unavailable. Please try again.",
 ) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json(
@@ -74,7 +75,7 @@ export async function forwardAdminMutation(
     });
   } catch {
     return NextResponse.json(
-      { message: "Enrollment service is unavailable. Please try again." },
+      { message: unavailableMessage },
       { status: 502 },
     );
   }
