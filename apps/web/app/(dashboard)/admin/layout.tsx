@@ -24,6 +24,8 @@ const adminNavigation: readonly DashboardNavigationGroup[] = [
       { label: "Enrollments", href: "/admin/enrollments" },
       { label: "Assignments", href: "/admin/assignments" },
       { label: "Exams", href: "/admin/exams" },
+      { label: "Notifications", href: "/admin/notifications" },
+      { label: "AI Assistant", href: "/admin/ai-assistant" },
       { label: "Curricula", href: "/admin/curricula" },
       { label: "Reports", href: "/admin/reports" },
       { label: "Announcements", href: "/admin/announcements" },
