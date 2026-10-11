@@ -36,11 +36,7 @@ export class ExamsController {
 
   @Patch(':id')
   @Roles('ADMIN', 'INSTRUCTOR')
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateExamDto,
-    @CurrentUser() user: UserResponse,
-  ) {
+  update(@Param('id') id: string, @Body() dto: UpdateExamDto, @CurrentUser() user: UserResponse) {
     return this.examsService.update(id, dto, user);
   }
 

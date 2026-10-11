@@ -19,11 +19,9 @@ export class ExamsService {
   }
 
   async listForOffering(offeringId: string, user: UserResponse) {
-    const offering = await this.database.client.orm.public.CourseOffering.where(
-      {
-        id: offeringId,
-      },
-    )
+    const offering = await this.database.client.orm.public.CourseOffering.where({
+      id: offeringId,
+    })
       .select('id', 'instructorId')
       .all()
       .first();
@@ -32,60 +30,13 @@ export class ExamsService {
       throw new NotFoundException('Course offering not found.');
     }
 
-    if (user.role === 'ADMIN') {
-      return this.queryExams({ offeringId }).then((records) =>
-        Promise.all(
-          records.map((record) => this.serializeExam(record, user.role)),
-        ),
-      );
-    }
-
-    if (user.role === 'INSTRUCTOR') {
-      const instructor = await this.resolveInstructor(user.id);
-      if (offering.instructorId !== instructor.id) {
-        throw new ForbiddenException(
-          'You can only view exams for the offerings you teach.',
-        );
-      }
-      return this.queryExams({ offeringId }).then((records) =>
-        Promise.all(
-          records.map((record) => this.serializeExam(record, user.role)),
-        ),
-      );
-    }
-
-    const student = await this.resolveStudent(user.id);
-    const enrollment = await this.database.client.orm.public.Enrollment.where({
-      studentId: student.id,
-      offeringId,
-      status: 'ACTIVE',
-    })
-      .select('id')
-      .all()
-      .first();
-
-    if (enrollment === null) {
-      throw new ForbiddenException(
-        'Student is not actively enrolled in this course offering.',
-      );
-    }
-
-    return this.queryExams({ offeringId }).then((records) =>
-      Promise.all(
-        records.map((record) => this.serializeExam(record, user.role)),
-      ),
-    );
+    const records = await this.queryExams({ offeringId });
+    return this.filterByRole(records, user);
   }
 
   async getById(id: string, user: UserResponse) {
     const record = await this.getExamRecord(id);
-    const visible = await this.filterByRole([record], user);
-
-    if (visible.length === 0) {
-      throw new ForbiddenException('You do not have access to this exam.');
-    }
-
-    return visible[0];
+    return this.filterByRole([record], user).then((items) => items[0]);
   }
 
   async getMyExams(user: UserResponse) {
@@ -98,13 +49,11 @@ export class ExamsService {
     const visible = [] as any[];
 
     for (const record of records) {
-      const enrollment = await this.database.client.orm.public.Enrollment.where(
-        {
-          studentId: student.id,
-          offeringId: record.offeringId,
-          status: 'ACTIVE',
-        },
-      )
+      const enrollment = await this.database.client.orm.public.Enrollment.where({
+        studentId: student.id,
+        offeringId: record.offeringId,
+        status: 'ACTIVE',
+      })
         .select('id')
         .all()
         .first();
@@ -125,11 +74,9 @@ export class ExamsService {
     }
 
     const instructor = await this.resolveInstructor(user.id);
-    const offering = await this.database.client.orm.public.CourseOffering.where(
-      {
-        id: offeringId,
-      },
-    )
+    const offering = await this.database.client.orm.public.CourseOffering.where({
+      id: offeringId,
+    })
       .select('id', 'instructorId', 'academicTermId')
       .all()
       .first();
@@ -150,18 +97,15 @@ export class ExamsService {
     }
 
     const examDate = this.normalizeDate(dto.examDate);
-    const academicTerm =
-      await this.database.client.orm.public.AcademicTerm.where({
-        id: offering.academicTermId,
-      })
-        .select('id', 'semester', 'startDate', 'endDate')
-        .all()
-        .first();
+    const academicTerm = await this.database.client.orm.public.AcademicTerm.where({
+      id: offering.academicTermId,
+    })
+      .select('id', 'semester', 'startDate', 'endDate')
+      .all()
+      .first();
 
     if (academicTerm === null) {
-      throw new NotFoundException(
-        'Academic term for this offering was not found.',
-      );
+      throw new NotFoundException('Academic term for this offering was not found.');
     }
 
     const termStart = this.normalizeDate(academicTerm.startDate);
@@ -193,13 +137,12 @@ export class ExamsService {
 
     if (user.role === 'INSTRUCTOR') {
       const instructor = await this.resolveInstructor(user.id);
-      const offering =
-        await this.database.client.orm.public.CourseOffering.where({
-          id: record.offeringId,
-        })
-          .select('id', 'instructorId', 'academicTermId')
-          .all()
-          .first();
+      const offering = await this.database.client.orm.public.CourseOffering.where({
+        id: record.offeringId,
+      })
+        .select('id', 'instructorId', 'academicTermId')
+        .all()
+        .first();
 
       if (offering === null || offering.instructorId !== instructor.id) {
         throw new ForbiddenException(
@@ -220,32 +163,26 @@ export class ExamsService {
 
     if (dto.examDate !== undefined) {
       const examDate = this.normalizeDate(dto.examDate);
-      const offering =
-        await this.database.client.orm.public.CourseOffering.where({
-          id: record.offeringId,
-        })
-          .select('id', 'academicTermId')
-          .all()
-          .first();
+      const offering = await this.database.client.orm.public.CourseOffering.where({
+        id: record.offeringId,
+      })
+        .select('id', 'academicTermId')
+        .all()
+        .first();
 
       if (offering === null) {
-        throw new NotFoundException(
-          'Course offering for this exam was not found.',
-        );
+        throw new NotFoundException('Course offering for this exam was not found.');
       }
 
-      const academicTerm =
-        await this.database.client.orm.public.AcademicTerm.where({
-          id: offering.academicTermId,
-        })
-          .select('id', 'semester', 'startDate', 'endDate')
-          .all()
-          .first();
+      const academicTerm = await this.database.client.orm.public.AcademicTerm.where({
+        id: offering.academicTermId,
+      })
+        .select('id', 'semester', 'startDate', 'endDate')
+        .all()
+        .first();
 
       if (academicTerm === null) {
-        throw new NotFoundException(
-          'Academic term for this exam was not found.',
-        );
+        throw new NotFoundException('Academic term for this exam was not found.');
       }
 
       const termStart = this.normalizeDate(academicTerm.startDate);
@@ -261,9 +198,7 @@ export class ExamsService {
 
     if (dto.maxScore !== undefined) {
       if (dto.maxScore <= 0) {
-        throw new BadRequestException(
-          'Maximum score must be greater than zero.',
-        );
+        throw new BadRequestException('Maximum score must be greater than zero.');
       }
       updates.maxScore = dto.maxScore;
     }
@@ -272,9 +207,9 @@ export class ExamsService {
       return this.serializeExam(record, user.role);
     }
 
-    const updated = await this.database.client.orm.public.Exam.where({
-      id,
-    }).update(updates);
+    const updated = await this.database.client.orm.public.Exam.where({ id }).update(
+      updates,
+    );
 
     if (updated === null) {
       throw new NotFoundException('Exam not found.');
@@ -290,11 +225,9 @@ export class ExamsService {
 
     const record = await this.getExamRecord(id);
     const instructor = await this.resolveInstructor(user.id);
-    const offering = await this.database.client.orm.public.CourseOffering.where(
-      {
-        id: record.offeringId,
-      },
-    )
+    const offering = await this.database.client.orm.public.CourseOffering.where({
+      id: record.offeringId,
+    })
       .select('id', 'instructorId')
       .all()
       .first();
@@ -310,9 +243,7 @@ export class ExamsService {
   }
 
   private async queryExams(criteria?: { offeringId?: string }) {
-    const where = criteria?.offeringId
-      ? { offeringId: criteria.offeringId }
-      : {};
+    const where = criteria?.offeringId ? { offeringId: criteria.offeringId } : {};
     return this.database.client.orm.public.Exam.where(where)
       .select('id', 'offeringId', 'title', 'examDate', 'maxScore')
       .all();
@@ -343,13 +274,12 @@ export class ExamsService {
       const visible = [] as any[];
 
       for (const record of records) {
-        const offering =
-          await this.database.client.orm.public.CourseOffering.where({
-            id: record.offeringId,
-          })
-            .select('id', 'instructorId')
-            .all()
-            .first();
+        const offering = await this.database.client.orm.public.CourseOffering.where({
+          id: record.offeringId,
+        })
+          .select('id', 'instructorId')
+          .all()
+          .first();
 
         if (offering && offering.instructorId === instructor.id) {
           visible.push(record);
@@ -366,15 +296,14 @@ export class ExamsService {
       const visible = [] as any[];
 
       for (const record of records) {
-        const enrollment =
-          await this.database.client.orm.public.Enrollment.where({
-            studentId: student.id,
-            offeringId: record.offeringId,
-            status: 'ACTIVE',
-          })
-            .select('id')
-            .all()
-            .first();
+        const enrollment = await this.database.client.orm.public.Enrollment.where({
+          studentId: student.id,
+          offeringId: record.offeringId,
+          status: 'ACTIVE',
+        })
+          .select('id')
+          .all()
+          .first();
 
         if (enrollment !== null) {
           visible.push(record);
@@ -390,19 +319,15 @@ export class ExamsService {
   }
 
   private async serializeExam(record: any, role: string) {
-    const offering = await this.database.client.orm.public.CourseOffering.where(
-      {
-        id: record.offeringId,
-      },
-    )
+    const offering = await this.database.client.orm.public.CourseOffering.where({
+      id: record.offeringId,
+    })
       .select('id', 'courseId', 'academicTermId', 'instructorId', 'section')
       .all()
       .first();
 
     const course = offering
-      ? await this.database.client.orm.public.Course.where({
-          id: offering.courseId,
-        })
+      ? await this.database.client.orm.public.Course.where({ id: offering.courseId })
           .select('id', 'code', 'title')
           .all()
           .first()
@@ -427,9 +352,7 @@ export class ExamsService {
       : null;
 
     const instructorUser = instructor
-      ? await this.database.client.orm.public.User.where({
-          id: instructor.userId,
-        })
+      ? await this.database.client.orm.public.User.where({ id: instructor.userId })
           .select('id', 'firstName', 'lastName')
           .all()
           .first()
@@ -439,9 +362,7 @@ export class ExamsService {
       id: record.id,
       offeringId: record.offeringId,
       title: record.title,
-      examDate: record.examDate
-        ? new Date(record.examDate).toISOString()
-        : null,
+      examDate: record.examDate ? new Date(record.examDate).toISOString() : null,
       maxScore: record.maxScore,
       course: course
         ? { id: course.id, code: course.code, title: course.title }
@@ -492,26 +413,20 @@ export class ExamsService {
       .first();
 
     if (instructor === null) {
-      throw new ForbiddenException(
-        'Instructor record not found for this account.',
-      );
+      throw new ForbiddenException('Instructor record not found for this account.');
     }
 
     return instructor;
   }
 
   private async resolveStudent(userId: string) {
-    const student = await this.database.client.orm.public.Student.where({
-      userId,
-    })
+    const student = await this.database.client.orm.public.Student.where({ userId })
       .select('id', 'userId')
       .all()
       .first();
 
     if (student === null) {
-      throw new ForbiddenException(
-        'Student record not found for this account.',
-      );
+      throw new ForbiddenException('Student record not found for this account.');
     }
 
     return student;

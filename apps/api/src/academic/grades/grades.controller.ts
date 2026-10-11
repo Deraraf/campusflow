@@ -35,11 +35,7 @@ export class GradesController {
 
   @Patch(':id')
   @Roles('ADMIN', 'INSTRUCTOR')
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateGradeDto,
-    @CurrentUser() user: UserResponse,
-  ) {
+  update(@Param('id') id: string, @Body() dto: UpdateGradeDto, @CurrentUser() user: UserResponse) {
     return this.gradesService.update(id, dto, user);
   }
 }
@@ -72,11 +68,8 @@ export class StudentGradesController {
   }
 
   @Get(':studentId/grades')
-  @Roles('ADMIN')
-  getStudentGrades(
-    @Param('studentId') studentId: string,
-    @CurrentUser() user: UserResponse,
-  ) {
+  @Roles('ADMIN', 'INSTRUCTOR')
+  getStudentGrades(@Param('studentId') studentId: string, @CurrentUser() user: UserResponse) {
     return this.gradesService.getStudentGrades(studentId, user);
   }
 }

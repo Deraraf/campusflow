@@ -21,20 +21,12 @@ export class GradesService {
 
   async getById(id: string, user: UserResponse) {
     const grade = await this.getGradeRecord(id);
-    const visible = await this.filterByRole([grade], user);
-
-    if (visible.length === 0) {
-      throw new ForbiddenException('You do not have access to this grade.');
-    }
-
-    return visible[0];
+    return this.filterByRole([grade], user).then((items) => items[0]);
   }
 
   async getMyGrades(user: UserResponse) {
     if (user.role !== 'STUDENT') {
-      throw new ForbiddenException(
-        'Only students can access their own grades.',
-      );
+      throw new ForbiddenException('Only students can access their own grades.');
     }
 
     const student = await this.resolveStudent(user.id);
@@ -46,15 +38,13 @@ export class GradesService {
   }
 
   async getStudentGrades(studentId: string, user: UserResponse) {
-    if (user.role !== 'ADMIN') {
+    if (user.role !== 'ADMIN' && user.role !== 'INSTRUCTOR') {
       throw new ForbiddenException(
-        "Only admins can view another student's grades.",
+        'You are not permitted to view student grades.',
       );
     }
 
-    const student = await this.database.client.orm.public.Student.where({
-      id: studentId,
-    })
+    const student = await this.database.client.orm.public.Student.where({ id: studentId })
       .select('id')
       .all()
       .first();
@@ -65,6 +55,37 @@ export class GradesService {
 
     const grades = await this.queryGrades();
     const filtered = grades.filter((grade) => grade.studentId === studentId);
+
+    if (user.role === 'INSTRUCTOR') {
+      const instructor = await this.resolveInstructor(user.id);
+      const visible = [] as any[];
+
+      for (const grade of filtered) {
+        const enrollment = await this.database.client.orm.public.Enrollment.where({
+          id: grade.enrollmentId,
+        })
+          .select('id', 'offeringId')
+          .all()
+          .first();
+
+        if (enrollment !== null) {
+          const offering = await this.database.client.orm.public.CourseOffering.where({
+            id: enrollment.offeringId,
+          })
+            .select('id', 'instructorId')
+            .all()
+            .first();
+
+          if (offering && offering.instructorId === instructor.id) {
+            visible.push(grade);
+          }
+        }
+      }
+
+      return Promise.all(
+        visible.map(async (grade) => this.serializeGrade(grade, user.role)),
+      );
+    }
 
     return Promise.all(
       filtered.map(async (grade) => this.serializeGrade(grade, user.role)),
@@ -88,19 +109,15 @@ export class GradesService {
     }
 
     const instructor = await this.resolveInstructor(user.id);
-    const offering = await this.database.client.orm.public.CourseOffering.where(
-      {
-        id: enrollment.offeringId,
-      },
-    )
+    const offering = await this.database.client.orm.public.CourseOffering.where({
+      id: enrollment.offeringId,
+    })
       .select('id', 'instructorId')
       .all()
       .first();
 
     if (offering === null) {
-      throw new NotFoundException(
-        'Offering for this enrollment was not found.',
-      );
+      throw new NotFoundException('Offering for this enrollment was not found.');
     }
 
     if (offering.instructorId !== instructor.id) {
@@ -110,9 +127,7 @@ export class GradesService {
     }
 
     if (enrollment.status === 'DROPPED') {
-      throw new ConflictException(
-        'Dropped enrollments cannot receive final grades.',
-      );
+      throw new ConflictException('Dropped enrollments cannot receive final grades.');
     }
 
     const existing = await this.database.client.orm.public.Grade.where({
@@ -123,9 +138,7 @@ export class GradesService {
       .first();
 
     if (existing !== null) {
-      throw new ConflictException(
-        'A final grade already exists for this enrollment.',
-      );
+      throw new ConflictException('A final grade already exists for this enrollment.');
     }
 
     const payload: Record<string, unknown> = {
@@ -135,9 +148,7 @@ export class GradesService {
 
     if (dto.score !== undefined) {
       if (!Number.isFinite(dto.score) || dto.score < 0) {
-        throw new BadRequestException(
-          'Score must be a valid non-negative number.',
-        );
+        throw new BadRequestException('Score must be a valid non-negative number.');
       }
       payload.score = dto.score;
     }
@@ -163,20 +174,16 @@ export class GradesService {
 
   async update(id: string, dto: UpdateGradeDto, user: UserResponse) {
     if (user.role !== 'INSTRUCTOR' && user.role !== 'ADMIN') {
-      throw new ForbiddenException(
-        'Only instructors or admins can update final grades.',
-      );
+      throw new ForbiddenException('Only instructors or admins can update final grades.');
     }
 
     const grade = await this.getGradeRecord(id);
 
     if (user.role === 'INSTRUCTOR') {
       const instructor = await this.resolveInstructor(user.id);
-      const enrollment = await this.database.client.orm.public.Enrollment.where(
-        {
-          id: grade.enrollmentId,
-        },
-      )
+      const enrollment = await this.database.client.orm.public.Enrollment.where({
+        id: grade.enrollmentId,
+      })
         .select('id', 'offeringId')
         .all()
         .first();
@@ -185,13 +192,12 @@ export class GradesService {
         throw new NotFoundException('Enrollment for this grade was not found.');
       }
 
-      const offering =
-        await this.database.client.orm.public.CourseOffering.where({
-          id: enrollment.offeringId,
-        })
-          .select('id', 'instructorId')
-          .all()
-          .first();
+      const offering = await this.database.client.orm.public.CourseOffering.where({
+        id: enrollment.offeringId,
+      })
+        .select('id', 'instructorId')
+        .all()
+        .first();
 
       if (offering === null || offering.instructorId !== instructor.id) {
         throw new ForbiddenException(
@@ -204,9 +210,7 @@ export class GradesService {
 
     if (dto.score !== undefined) {
       if (!Number.isFinite(dto.score) || dto.score < 0) {
-        throw new BadRequestException(
-          'Score must be a valid non-negative number.',
-        );
+        throw new BadRequestException('Score must be a valid non-negative number.');
       }
       updates.score = dto.score;
     }
@@ -223,9 +227,9 @@ export class GradesService {
       return this.serializeGrade(grade, user.role);
     }
 
-    const updated = await this.database.client.orm.public.Grade.where({
-      id,
-    }).update(updates);
+    const updated = await this.database.client.orm.public.Grade.where({ id }).update(
+      updates,
+    );
 
     if (updated === null) {
       throw new NotFoundException('Grade not found.');
@@ -265,22 +269,20 @@ export class GradesService {
       const visible = [] as any[];
 
       for (const grade of grades) {
-        const enrollment =
-          await this.database.client.orm.public.Enrollment.where({
-            id: grade.enrollmentId,
-          })
-            .select('id', 'offeringId')
-            .all()
-            .first();
+        const enrollment = await this.database.client.orm.public.Enrollment.where({
+          id: grade.enrollmentId,
+        })
+          .select('id', 'offeringId')
+          .all()
+          .first();
 
         if (enrollment !== null) {
-          const offering =
-            await this.database.client.orm.public.CourseOffering.where({
-              id: enrollment.offeringId,
-            })
-              .select('id', 'instructorId')
-              .all()
-              .first();
+          const offering = await this.database.client.orm.public.CourseOffering.where({
+            id: enrollment.offeringId,
+          })
+            .select('id', 'instructorId')
+            .all()
+            .first();
 
           if (offering && offering.instructorId === instructor.id) {
             visible.push(grade);
@@ -313,9 +315,7 @@ export class GradesService {
       .first();
 
     const student = enrollment
-      ? await this.database.client.orm.public.Student.where({
-          id: enrollment.studentId,
-        })
+      ? await this.database.client.orm.public.Student.where({ id: enrollment.studentId })
           .select('id', 'userId')
           .all()
           .first()
@@ -331,9 +331,7 @@ export class GradesService {
       : null;
 
     const course = offering
-      ? await this.database.client.orm.public.Course.where({
-          id: offering.courseId,
-        })
+      ? await this.database.client.orm.public.Course.where({ id: offering.courseId })
           .select('id', 'code', 'title')
           .all()
           .first()
@@ -358,9 +356,7 @@ export class GradesService {
       : null;
 
     const instructorUser = instructor
-      ? await this.database.client.orm.public.User.where({
-          id: instructor.userId,
-        })
+      ? await this.database.client.orm.public.User.where({ id: instructor.userId })
           .select('id', 'firstName', 'lastName')
           .all()
           .first()
@@ -419,26 +415,20 @@ export class GradesService {
       .first();
 
     if (instructor === null) {
-      throw new ForbiddenException(
-        'Instructor record not found for this account.',
-      );
+      throw new ForbiddenException('Instructor record not found for this account.');
     }
 
     return instructor;
   }
 
   private async resolveStudent(userId: string) {
-    const student = await this.database.client.orm.public.Student.where({
-      userId,
-    })
+    const student = await this.database.client.orm.public.Student.where({ userId })
       .select('id', 'userId')
       .all()
       .first();
 
     if (student === null) {
-      throw new ForbiddenException(
-        'Student record not found for this account.',
-      );
+      throw new ForbiddenException('Student record not found for this account.');
     }
 
     return student;

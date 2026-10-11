@@ -13,11 +13,7 @@ import { ExamsService } from './exams.service.js';
     DatabaseModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  controllers: [
-    ExamsController,
-    CourseOfferingsExamsController,
-    StudentExamsController,
-  ],
+  controllers: [ExamsController, CourseOfferingsExamsController, StudentExamsController],
   providers: [ExamsService],
 })
 export class ExamsModule {}

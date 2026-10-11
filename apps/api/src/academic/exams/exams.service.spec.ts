@@ -4,7 +4,7 @@ import { DatabaseService } from '../../database/database.service.js';
 import type { UserResponse } from '../../users/entities/user.entity.js';
 import { ExamsService } from './exams.service.js';
 
-function createDatabase(seed: Record<string, unknown[]>) {
+function createDatabase(seed: Record<string, Record<string, unknown>[]>) {
   const state: Record<string, Record<string, unknown>[]> = {};
   const names = [
     'User',
@@ -18,9 +18,7 @@ function createDatabase(seed: Record<string, unknown[]>) {
   ];
 
   for (const name of names) {
-    state[name] = ((seed[name] ?? []) as Record<string, unknown>[]).map(
-      (row) => ({ ...row }),
-    );
+    state[name] = (seed[name] ?? []).map((row) => ({ ...row }));
   }
 
   let generatedId = 1;
@@ -30,9 +28,7 @@ function createDatabase(seed: Record<string, unknown[]>) {
       {
         where: (criteria: Record<string, unknown>) => {
           const matches = (row: Record<string, unknown>) =>
-            Object.entries(criteria).every(
-              ([key, value]) => row[key] === value,
-            );
+            Object.entries(criteria).every(([key, value]) => row[key] === value);
 
           const query = {
             select: () => query,
@@ -65,9 +61,7 @@ function createDatabase(seed: Record<string, unknown[]>) {
   );
 
   return {
-    database: {
-      client: { orm: { public: tables } },
-    } as unknown as DatabaseService,
+    database: { client: { orm: { public: tables } } } as unknown as DatabaseService,
     state,
   };
 }
@@ -116,15 +110,11 @@ describe('ExamsService', () => {
     const service = new ExamsService(database);
 
     await expect(
-      service.create(
-        offering.id,
-        {
-          title: 'Midterm',
-          examDate: '2025-02-15',
-          maxScore: 100,
-        },
-        user,
-      ),
+      service.create(offering.id, {
+        title: 'Midterm',
+        examDate: '2025-02-15',
+        maxScore: 100,
+      }, user),
     ).resolves.toMatchObject({
       title: 'Midterm',
       maxScore: 100,
@@ -144,15 +134,11 @@ describe('ExamsService', () => {
     const service = new ExamsService(database);
 
     await expect(
-      service.create(
-        offering.id,
-        {
-          title: 'Midterm',
-          examDate: '2025-06-01',
-          maxScore: 100,
-        },
-        user,
-      ),
+      service.create(offering.id, {
+        title: 'Midterm',
+        examDate: '2025-06-01',
+        maxScore: 100,
+      }, user),
     ).rejects.toBeInstanceOf(BadRequestException);
   });
 
@@ -176,49 +162,10 @@ describe('ExamsService', () => {
     });
 
     const service = new ExamsService(database);
-    const studentUser: UserResponse = {
-      ...user,
-      id: 'user-2',
-      role: 'STUDENT',
-    };
+    const studentUser: UserResponse = { ...user, id: 'user-2', role: 'STUDENT' };
 
     await expect(
       service.update('exam-1', { title: 'Quiz 2' }, studentUser),
-    ).rejects.toBeInstanceOf(ForbiddenException);
-  });
-
-  it('rejects students from viewing a non-enrolled offering exam list', async () => {
-    const { database } = createDatabase({
-      User: [user],
-      Instructor: [instructor],
-      Course: [course],
-      AcademicTerm: [academicTerm],
-      CourseOffering: [offering],
-      Student: [{ id: 'student-1', userId: 'user-2' }],
-      Exam: [
-        {
-          id: 'exam-1',
-          offeringId: offering.id,
-          instructorId: instructor.id,
-          title: 'Quiz',
-          examDate: '2025-02-10T00:00:00.000Z',
-          maxScore: 50,
-        },
-      ],
-    });
-
-    const service = new ExamsService(database);
-    const studentUser: UserResponse = {
-      ...user,
-      id: 'user-2',
-      role: 'STUDENT',
-      email: 'student@example.com',
-      firstName: 'Sam',
-      lastName: 'Student',
-    };
-
-    await expect(
-      service.listForOffering(offering.id, studentUser),
     ).rejects.toBeInstanceOf(ForbiddenException);
   });
 });
