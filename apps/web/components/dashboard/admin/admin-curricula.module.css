@@ -1,0 +1,671 @@
+.page {
+  width: min(100%, 1640px);
+  margin-inline: auto;
+  padding: 2rem clamp(1rem, 2.6vw, 2.5rem) 3rem;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.eyebrow {
+  margin-bottom: 0.55rem;
+  color: var(--accent-strong);
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.pageHeader h1,
+.dialogHeader h2 {
+  color: var(--foreground);
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.description {
+  max-width: 48rem;
+  margin-top: 0.55rem;
+  color: var(--muted-strong);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.selectorBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  padding: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.selector,
+.filterField,
+.formField {
+  display: grid;
+  min-width: 0;
+  gap: 0.3rem;
+}
+
+.selector > span,
+.filterField > span,
+.formField > span {
+  color: var(--muted-strong);
+  font-size: 0.69rem;
+  font-weight: 650;
+}
+
+.selector select,
+.filterField select,
+.formField input,
+.formField select {
+  width: 100%;
+  min-height: 40px;
+  padding: 0.45rem 0.62rem;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 0.78rem;
+}
+
+.selector select:disabled,
+.filterField select:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.selector select:focus-visible,
+.filterField select:focus-visible,
+.formField input:focus-visible,
+.formField select:focus-visible,
+.searchField:focus-within,
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible,
+.dangerButton:focus-visible,
+.textButton:focus-visible,
+.iconButton:focus-visible,
+.iconAction:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.optionErrors {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.curriculumSection {
+  min-width: 0;
+}
+
+.programHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.programHeader h2 {
+  color: var(--foreground);
+  font-size: 1.12rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.parentPath {
+  margin-bottom: 0.3rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.code {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.14rem 0.43rem;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.programMeta {
+  margin-top: 0.3rem;
+  color: var(--muted-strong);
+  font-size: 0.72rem;
+}
+
+.optionWarning {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  margin-bottom: 0.65rem;
+  padding: 0.7rem 0.8rem;
+  color: var(--warning);
+  background: var(--warning-soft);
+  border-radius: 5px;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+
+.searchField {
+  display: flex;
+  min-width: min(100%, 16rem);
+  min-height: 38px;
+  flex: 1 1 16rem;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.62rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+.searchField input {
+  width: 100%;
+  min-width: 0;
+  color: var(--foreground);
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: 0.76rem;
+}
+
+.filterField {
+  min-width: 9rem;
+}
+
+.resultCount {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.71rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.curriculumTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.curriculumTable th {
+  padding: 0.73rem 0.8rem;
+  color: var(--muted);
+  background: var(--surface-subtle);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.67rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.curriculumTable td {
+  padding: 0.75rem 0.8rem;
+  color: var(--muted-strong);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.74rem;
+  vertical-align: middle;
+}
+
+.curriculumTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.courseCell {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.courseCell strong {
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.courseCell span {
+  color: var(--muted-strong);
+  font-size: 0.68rem;
+}
+
+.typeBadge {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  padding: 0.12rem 0.42rem;
+  color: var(--teal);
+  background: var(--teal-soft);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.mobilePlacements {
+  display: none;
+  list-style: none;
+}
+
+.mobilePlacement {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.mobilePlacement dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.mobilePlacement dl > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.mobilePlacement dt {
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+
+.mobilePlacement dd {
+  color: var(--muted-strong);
+  font-size: 0.72rem;
+}
+
+.emptyState,
+.errorBanner {
+  display: grid;
+  min-height: 12rem;
+  justify-items: center;
+  align-content: center;
+  gap: 0.55rem;
+  padding: 1.4rem;
+  color: var(--muted-strong);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  text-align: center;
+}
+
+.emptyState svg {
+  color: var(--accent-strong);
+}
+
+.emptyState h2,
+.emptyState h3 {
+  color: var(--foreground);
+  font-size: 0.94rem;
+}
+
+.emptyState p {
+  max-width: 33rem;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.errorBanner {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-color: color-mix(in srgb, var(--danger) 28%, var(--border));
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.notice {
+  margin-bottom: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  color: var(--success);
+  background: var(--success-soft);
+  border-radius: 5px;
+  font-size: 0.76rem;
+}
+
+.loadingSkeleton {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.loadingSkeleton span {
+  display: block;
+  height: 3.6rem;
+  background: var(--surface-subtle);
+  border-radius: 4px;
+  animation: curriculaPulse 1.4s ease-in-out infinite alternate;
+}
+
+.loadingSkeleton span:first-child {
+  height: 2.8rem;
+}
+
+@keyframes curriculaPulse {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton,
+.textButton {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.primaryButton {
+  color: #fff;
+  background: var(--accent-strong);
+  border: 1px solid var(--accent-strong);
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.secondaryButton {
+  color: var(--muted-strong);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.textButton {
+  color: var(--accent-strong);
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.textButton:hover {
+  background: var(--accent-soft);
+}
+
+.dangerButton {
+  color: #fff;
+  background: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.dangerButton:disabled,
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.iconAction,
+.iconButton {
+  display: inline-grid;
+  width: 35px;
+  height: 35px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--muted-strong);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.deleteAction:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.dialogCopy {
+  margin-bottom: 1rem;
+  color: var(--muted-strong);
+  font-size: 0.79rem;
+  line-height: 1.55;
+}
+
+.dialogSubtitle {
+  margin-top: 0.28rem;
+  color: var(--muted-strong);
+  font-size: 0.73rem;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: 1rem;
+  background: rgb(7 17 31 / 58%);
+}
+
+.dialog {
+  width: min(100%, 39rem);
+  max-height: min(90svh, 48rem);
+  overflow-y: auto;
+  padding: 1.2rem;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: var(--shadow);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dialogHeader .eyebrow {
+  margin-bottom: 0.32rem;
+}
+
+.dialogHeader h2 {
+  font-size: 1.18rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.formField {
+  display: grid;
+  min-width: 0;
+  gap: 0.3rem;
+}
+
+.formField > span {
+  color: var(--muted-strong);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.formField input,
+.formField select {
+  width: 100%;
+  min-height: 38px;
+  padding: 0.42rem 0.6rem;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 0.76rem;
+}
+
+.formField small {
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.4;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.formSummary {
+  display: grid;
+  gap: 0.28rem;
+  padding: 0.7rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+.formSummary span,
+.formHint {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.formSummary strong {
+  color: var(--foreground);
+  font-size: 0.78rem;
+}
+
+.formSummary small {
+  color: var(--muted-strong);
+  font-size: 0.66rem;
+}
+
+.formError {
+  padding: 0.68rem;
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-radius: 5px;
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 980px) {
+  .tableWrap {
+    display: none;
+  }
+
+  .mobilePlacements {
+    display: grid;
+    gap: 0.55rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding-top: 1.35rem;
+  }
+
+  .pageHeader,
+  .programHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .pageHeader h1 {
+    font-size: 1.6rem;
+  }
+
+  .selectorBar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .searchField,
+  .filterField {
+    min-width: 100%;
+  }
+
+  .resultCount {
+    margin-left: 0;
+  }
+
+  .dialog {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mobilePlacement dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingSkeleton span {
+    animation: none;
+  }
+}

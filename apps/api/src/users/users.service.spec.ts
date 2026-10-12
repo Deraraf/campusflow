@@ -15,6 +15,98 @@ function createTokenTable(rows: Record<string, unknown>[]) {
   };
 }
 
+describe('UsersService admin role management', () => {
+  it('promotes a student to instructor in one transaction and creates the instructor profile', async () => {
+    const userTable = {
+      where: vi.fn((criteria: Record<string, unknown>) => ({
+        all: () => ({
+          first: async () =>
+            criteria.id === 'user-1'
+              ? { id: 'user-1', role: 'STUDENT', status: 'ACTIVE' }
+              : null,
+        }),
+        update: async (values: Record<string, unknown>) => ({
+          id: 'user-1',
+          role: values.role,
+          status: 'ACTIVE',
+        }),
+      })),
+    };
+    const instructorTable = {
+      where: vi.fn((criteria: Record<string, unknown>) => ({
+        all: () => ({
+          first: async () => {
+            if (criteria.userId === 'user-1') return null;
+            if (criteria.employeeNumber === 'E-101') return null;
+            return null;
+          },
+        }),
+        update: vi.fn(),
+      })),
+      create: vi.fn(async (values: Record<string, unknown>) => ({
+        id: 'instructor-1',
+        ...values,
+      })),
+    };
+    const departmentTable = {
+      where: vi.fn((criteria: Record<string, unknown>) => ({
+        all: () => ({
+          first: async () =>
+            criteria.id === 'dept-1' ? { id: 'dept-1' } : null,
+        }),
+      })),
+    };
+    const transaction = vi.fn(async (callback) =>
+      callback({
+        orm: {
+          public: {
+            User: userTable,
+            Instructor: instructorTable,
+            Department: departmentTable,
+          },
+        },
+      }),
+    );
+    const database = {
+      client: { transaction },
+    } as unknown as DatabaseService;
+    const usersService = new UsersService(database);
+
+    await expect(
+      usersService.updateRole('user-1', {
+        role: 'INSTRUCTOR',
+        departmentId: 'dept-1',
+        employeeNumber: 'E-101',
+      }),
+    ).resolves.toMatchObject({
+      id: 'user-1',
+      role: 'INSTRUCTOR',
+    });
+
+    expect(transaction).toHaveBeenCalledOnce();
+    expect(instructorTable.create).toHaveBeenCalledWith({
+      userId: 'user-1',
+      employeeNumber: 'E-101',
+      departmentId: 'dept-1',
+    });
+  });
+
+  it('rejects admin role assignment and other non-promotion role changes', async () => {
+    const database = {
+      client: { orm: { public: { User: { where: vi.fn() } } } },
+    } as unknown as DatabaseService;
+    const usersService = new UsersService(database);
+
+    await expect(
+      usersService.updateRole('user-1', { role: 'ADMIN' as any }),
+    ).rejects.toThrow('Admin role');
+
+    await expect(
+      usersService.updateRole('user-1', { role: 'STUDENT' as any }),
+    ).rejects.toThrow('Only Student-to-Instructor promotion');
+  });
+});
+
 describe('UsersService auth token storage', () => {
   it('does not accept an email verification token as a password reset token', async () => {
     const verificationToken = {

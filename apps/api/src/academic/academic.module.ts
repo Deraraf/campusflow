@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AcademicTermsModule } from './academic-terms/academic-terms.module';
 import { AcademicYearsModule } from './academic-years/academic-years.module';
-import { CollegesModule } from './colleges/colleges.module'; // Corrected import path
+import { CollegesModule } from './colleges/colleges.module';
 import { DepartmentsModule } from './departments/departments.module.js';
 import { ProgramsModule } from './programs/programs.module.js';
 import { CoursesModule } from './courses/courses.module.js';
@@ -9,6 +9,12 @@ import { CourseOfferingsModule } from './course-offerings/course-offerings.modul
 import { StudentApplicationsModule } from './student-applications/student-applications.module.js';
 import { StudentsModule } from './students/students.module.js';
 import { StudentAcademicStandingsModule } from './student-academic-standings/student-academic-standings.module.js';
+import { EnrollmentsModule } from './enrollments/enrollments.module.js';
+import { AssignmentsModule } from './assignments/assignments.module.js';
+import { SubmissionsModule } from './submissions/submissions.module.js';
+import { AttendanceModule } from './attendance/attendance.module.js';
+import { ExamsModule } from './exams/exams.module.js';
+import { GradesModule } from './grades/grades.module.js';
 
 @Module({
   imports: [
@@ -22,6 +28,12 @@ import { StudentAcademicStandingsModule } from './student-academic-standings/stu
     StudentApplicationsModule,
     StudentsModule,
     StudentAcademicStandingsModule,
+    EnrollmentsModule,
+    AssignmentsModule,
+    SubmissionsModule,
+    AttendanceModule,
+    ExamsModule,
+    GradesModule,
   ],
 })
 export class AcademicModule {}

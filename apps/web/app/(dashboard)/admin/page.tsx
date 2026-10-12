@@ -1,5 +1,12 @@
-import AdminOverview from "../../../components/dashboard/admin/admin-overview";
+import { Suspense } from "react";
+import AdminOverview, {
+  AdminOverviewLoading,
+} from "../../../components/dashboard/admin/admin-overview";
 
 export default function AdminDashboardPage() {
-  return <AdminOverview />;
+  return (
+    <Suspense fallback={<AdminOverviewLoading />}>
+      <AdminOverview />
+    </Suspense>
+  );
 }

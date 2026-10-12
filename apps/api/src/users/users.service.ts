@@ -1,6 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { DatabaseService } from '../database/database.service';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   AuthTokenRecord,
@@ -182,6 +188,93 @@ export class UsersService {
     });
 
     return user === null ? null : this.toResponse(user);
+  }
+
+  async updateRole(id: string, dto: UpdateUserRoleDto): Promise<UserResponse> {
+    const nextRole = typeof dto.role === 'string' ? dto.role.trim().toUpperCase() : dto.role;
+
+    if (nextRole === 'ADMIN') {
+      throw new BadRequestException(
+        'Admin role assignment is not allowed through this endpoint',
+      );
+    }
+
+    if (nextRole !== 'INSTRUCTOR') {
+      throw new BadRequestException(
+        'Only Student-to-Instructor promotion is supported',
+      );
+    }
+
+    return this.database.client.transaction(async (tx) => {
+      const user = await tx.orm.public.User.where({ id }).all().first();
+
+      if (user === null) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (user.role !== 'STUDENT') {
+        throw new BadRequestException(
+          'Only STUDENT accounts can be promoted to INSTRUCTOR',
+        );
+      }
+
+      const departmentId = dto.departmentId?.trim();
+      const employeeNumber = dto.employeeNumber?.trim();
+
+      if (!departmentId) {
+        throw new BadRequestException('departmentId is required');
+      }
+
+      if (!employeeNumber) {
+        throw new BadRequestException('employeeNumber is required');
+      }
+
+      const department = await tx.orm.public.Department.where({
+        id: departmentId,
+      })
+        .all()
+        .first();
+
+      if (department === null) {
+        throw new NotFoundException('Department not found');
+      }
+
+      const existingInstructorByUser = await tx.orm.public.Instructor.where({
+        userId: id,
+      })
+        .all()
+        .first();
+
+      if (existingInstructorByUser !== null) {
+        throw new ConflictException('User already has an Instructor record');
+      }
+
+      const existingInstructorByEmployee = await tx.orm.public.Instructor.where({
+        employeeNumber,
+      })
+        .all()
+        .first();
+
+      if (existingInstructorByEmployee !== null) {
+        throw new ConflictException('Employee number already exists');
+      }
+
+      await tx.orm.public.Instructor.create({
+        userId: id,
+        employeeNumber,
+        departmentId,
+      });
+
+      const updated = await tx.orm.public.User.where({ id }).update({
+        role: 'INSTRUCTOR',
+      });
+
+      if (updated === null) {
+        throw new NotFoundException('User not found');
+      }
+
+      return this.toResponse(updated);
+    });
   }
 
   async refreshPasswordResetToken(data: {

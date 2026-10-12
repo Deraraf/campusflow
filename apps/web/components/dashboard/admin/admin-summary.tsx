@@ -1,5 +1,6 @@
 import {
   BookOpenCheck,
+  ClipboardCheck,
   GraduationCap,
   Landmark,
   Users,
@@ -9,8 +10,9 @@ import styles from "./admin-overview.module.css";
 
 export type AdminMetric = Readonly<{
   label: string;
-  value: string | null;
+  value: number | null;
   detail: string;
+  unavailable?: boolean;
 }>;
 
 const metricIcons: readonly LucideIcon[] = [
@@ -18,6 +20,7 @@ const metricIcons: readonly LucideIcon[] = [
   GraduationCap,
   Landmark,
   BookOpenCheck,
+  ClipboardCheck,
 ];
 
 export default function AdminSummary({
@@ -30,13 +33,21 @@ export default function AdminSummary({
       {metrics.map((metric, index) => {
         const Icon = metricIcons[index % metricIcons.length] ?? Users;
         return (
-          <article className={styles.metric} key={metric.label}>
+          <article
+            className={`${styles.metric} ${metric.unavailable ? styles.metricUnavailable : ""}`}
+            key={metric.label}
+            aria-label={`${metric.label}: ${metric.value === null ? "unavailable" : metric.value}`}
+          >
             <div className={styles.metricLabel}>
               <span>{metric.label}</span>
               <Icon size={17} aria-hidden="true" />
             </div>
-            <strong className={styles.metricValue}>{metric.value ?? "—"}</strong>
-            <span className={styles.metricDetail}>{metric.detail}</span>
+            <strong className={styles.metricValue}>
+              {metric.value === null ? "—" : metric.value.toLocaleString()}
+            </strong>
+            <span className={styles.metricDetail}>
+              {metric.detail}
+            </span>
           </article>
         );
       })}

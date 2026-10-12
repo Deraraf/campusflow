@@ -1,0 +1,603 @@
+.page {
+  width: min(100%, 1640px);
+  margin-inline: auto;
+  padding: 2rem clamp(1rem, 2.6vw, 2.5rem) 3rem;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow,
+.sectionEyebrow {
+  margin-bottom: 0.55rem;
+  color: var(--accent-strong);
+  font-size: 0.67rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.pageHeader h1 {
+  color: var(--foreground);
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.description {
+  margin-top: 0.55rem;
+  color: var(--muted-strong);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.totalCount,
+.resultCount {
+  color: var(--muted-strong);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.7rem;
+  padding: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.searchField {
+  display: flex;
+  min-width: min(100%, 16rem);
+  height: 40px;
+  flex: 1 1 18rem;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0 0.7rem;
+  color: var(--muted);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+.searchField input {
+  width: 100%;
+  min-width: 0;
+  color: var(--foreground);
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: 0.82rem;
+}
+
+.searchField:focus-within,
+.filterField select:focus-visible,
+.secondaryButton:focus-visible,
+.recordLink:focus-visible,
+.backLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.filterField {
+  display: grid;
+  min-width: 10rem;
+  gap: 0.32rem;
+}
+
+.filterField > span {
+  color: var(--muted-strong);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.filterField select {
+  width: 100%;
+  min-height: 40px;
+  padding: 0.5rem 0.65rem;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+.resultCount {
+  margin: 0.85rem 0 0.55rem;
+  color: var(--muted);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.studentTable,
+.enrollmentTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.studentTable th,
+.enrollmentTable th {
+  padding: 0.75rem 0.9rem;
+  color: var(--muted);
+  background: var(--surface-subtle);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.studentTable td,
+.enrollmentTable td {
+  padding: 0.8rem 0.9rem;
+  color: var(--muted-strong);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.76rem;
+  vertical-align: middle;
+}
+
+.studentTable tbody tr:last-child td,
+.enrollmentTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.studentIdentity,
+.programIdentity {
+  display: grid;
+  min-width: 0;
+  gap: 0.22rem;
+}
+
+.studentIdentity strong,
+.programIdentity strong {
+  overflow: hidden;
+  color: var(--foreground);
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+}
+
+.studentIdentity span,
+.programIdentity span {
+  overflow-wrap: anywhere;
+  color: var(--muted-strong);
+  font-size: 0.72rem;
+}
+
+.statusBadge,
+.currentBadge {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 650;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.statusACTIVE,
+.enrollmentACTIVE,
+.enrollmentCOMPLETED {
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+.statusSUSPENDED,
+.enrollmentFAILED {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.statusGRADUATED,
+.enrollmentDROPPED {
+  color: var(--muted-strong);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+}
+
+.statusWITHDRAWN {
+  color: var(--warning);
+  background: var(--warning-soft);
+}
+
+.actionCell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.recordLink,
+.backLink {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.recordLink:hover,
+.backLink:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mobileStudents,
+.mobileEnrollments {
+  display: none;
+  list-style: none;
+}
+
+.emptyPanel,
+.errorPanel {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  min-height: 13rem;
+  padding: 2rem 1rem;
+  color: var(--muted-strong);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  text-align: center;
+}
+
+.emptyPanel svg {
+  color: var(--accent-strong);
+}
+
+.emptyPanel h2,
+.errorPanel h3 {
+  color: var(--foreground);
+  font-size: 0.96rem;
+}
+
+.emptyPanel p,
+.errorPanel p {
+  max-width: 34rem;
+  color: var(--muted-strong);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.errorPanel {
+  grid-template-columns: minmax(0, 1fr) auto;
+  justify-items: start;
+  min-height: 0;
+  padding: 1rem;
+  border-color: color-mix(in srgb, var(--danger) 35%, var(--border));
+  text-align: left;
+}
+
+.errorPanel > div {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.secondaryButton {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  color: var(--muted-strong);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.secondaryButton:hover {
+  color: var(--foreground);
+  background: var(--surface-subtle);
+}
+
+.loadingPanel {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.loadingPanel span {
+  display: block;
+  height: 2.35rem;
+  background: var(--surface-subtle);
+  border-radius: 4px;
+  animation: loadingPulse 1.4s ease-in-out infinite alternate;
+}
+
+.loadingPanel span:first-child {
+  height: 1.8rem;
+}
+
+.loadingPanel span:nth-child(2) {
+  width: 92%;
+}
+
+.loadingPanel span:nth-child(3) {
+  width: 96%;
+}
+
+.loadingPanel span:nth-child(4) {
+  width: 87%;
+}
+
+@keyframes loadingPulse {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+.backLink {
+  justify-content: flex-start;
+  margin-bottom: 1.15rem;
+}
+
+.recordSection {
+  margin-top: 1.2rem;
+  padding: 1.15rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.sectionEyebrow {
+  margin-bottom: 0.25rem;
+  font-size: 0.62rem;
+}
+
+.sectionHeader h2 {
+  color: var(--foreground);
+  font-size: 1.05rem;
+  font-weight: 680;
+}
+
+.sectionHeader > span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.profileFacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.profileFacts > div {
+  display: grid;
+  min-width: 0;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem 0.85rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.profileFacts dt,
+.mobileFacts dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.profileFacts dd,
+.mobileFacts dd {
+  overflow-wrap: anywhere;
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 550;
+}
+
+.standingList {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.standingList li {
+  position: relative;
+  display: flex;
+  gap: 0.85rem;
+  min-height: 4.25rem;
+  padding-bottom: 0.8rem;
+}
+
+.standingList li:not(:last-child)::before {
+  position: absolute;
+  top: 0.6rem;
+  bottom: -0.05rem;
+  left: 0.34rem;
+  width: 1px;
+  background: var(--border);
+  content: "";
+}
+
+.timelineMarker {
+  position: relative;
+  z-index: 1;
+  width: 0.7rem;
+  height: 0.7rem;
+  flex: 0 0 auto;
+  margin-top: 0.22rem;
+  background: var(--teal);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--teal);
+}
+
+.standingContent {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+}
+
+.standingHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.standingHeading strong {
+  color: var(--foreground);
+  font-size: 0.82rem;
+}
+
+.standingContent p,
+.sectionEmpty {
+  color: var(--muted-strong);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.currentBadge {
+  min-height: 21px;
+  color: var(--teal);
+  background: var(--teal-soft);
+  font-size: 0.64rem;
+}
+
+.sectionEmpty {
+  padding: 0.65rem 0;
+}
+
+.enrollmentTable td {
+  font-size: 0.72rem;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 860px) {
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .filterField {
+    flex: 1 1 10rem;
+  }
+
+  .tableWrap:has(.studentTable) {
+    display: none;
+  }
+
+  .mobileStudents {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .mobileStudent,
+  .mobileEnrollment {
+    display: grid;
+    gap: 0.9rem;
+    padding: 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .mobileStudentHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .mobileFacts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .mobileFacts > div {
+    display: grid;
+    min-width: 0;
+    gap: 0.25rem;
+  }
+
+  .profileFacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tableWrap:has(.enrollmentTable) {
+    display: none;
+  }
+
+  .mobileEnrollments {
+    display: grid;
+    gap: 0.65rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-top: 1.25rem;
+  }
+
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .pageHeader h1 {
+    font-size: 1.55rem;
+  }
+
+  .toolbar {
+    display: grid;
+  }
+
+  .searchField,
+  .filterField {
+    min-width: 0;
+  }
+
+  .profileFacts,
+  .mobileFacts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .recordSection {
+    padding: 0.9rem;
+  }
+
+  .errorPanel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
